@@ -1,8 +1,8 @@
-from rest_framework import generics
 from django.db.models import Q
+from rest_framework import generics
 
 from .models import Movie
-from .serializers import MovieSearchSerializer, MovieDetailSerializer
+from .serializers import MovieDetailSerializer, MovieSearchSerializer
 
 # Create your views here.
 
