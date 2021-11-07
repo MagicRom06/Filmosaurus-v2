@@ -32,6 +32,8 @@ services:
       - backend
     networks:
       - app-network
+    volumes:
+      - ./frontend:/code
 
 volumes:
   postgres_data:
