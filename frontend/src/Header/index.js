@@ -40,13 +40,13 @@ const StyledLi = styled.li `
 `;
 
 const Header = () => (
-<StyledNavBar>
-    <StyledList>
-        <StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary>
-        <StyledLi>Sign up</StyledLi>
-        <StyledLi>Login</StyledLi>
-    </StyledList>
-</StyledNavBar>
+    <StyledNavBar>
+        <StyledList>
+            <StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary>
+            <StyledLi>Sign up</StyledLi>
+            <StyledLi>Login</StyledLi>
+        </StyledList>
+    </StyledNavBar>
 )
 
 export default Header;
