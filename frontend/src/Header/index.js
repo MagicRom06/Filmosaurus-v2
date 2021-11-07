@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+
 const StyledNavBar = styled.div `
     padding: 20px;
     color: #171212;
@@ -10,6 +11,11 @@ const StyledHeadlinePrimary = styled.h1 `
     font-weight: 300;
     letter-spacing: 2px;
     float: left;
+
+    @media only screen and (max-width: 992px) {
+        float: none;
+        text-align: center;
+    }
 `;
 
 const StyledList = styled.ul `
@@ -27,18 +33,20 @@ const StyledLi = styled.li `
     padding: 14px 16px;
     text-decoration: none;
     font-size: 18px;
+
+    @media only screen and (max-width: 992px) {
+        float: none;
+    }
 `;
 
-const Header = () => {
-    return (
-        <StyledNavBar>
-            <StyledList>
-                <StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary>
-                <StyledLi>Sign up</StyledLi>
-                <StyledLi>Login</StyledLi>
-            </StyledList>
-        </StyledNavBar>
-    )
-}
+const Header = () => (
+<StyledNavBar>
+    <StyledList>
+        <StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary>
+        <StyledLi>Sign up</StyledLi>
+        <StyledLi>Login</StyledLi>
+    </StyledList>
+</StyledNavBar>
+)
 
 export default Header;
