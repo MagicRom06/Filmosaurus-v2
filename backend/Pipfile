@@ -10,6 +10,7 @@ psycopg2-binary = "*"
 isort = "*"
 flake8 = "*"
 imdbpy = "*"
+djangorestframework = "==3.12.4"
 
 [dev-packages]
 

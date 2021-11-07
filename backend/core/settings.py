@@ -45,7 +45,10 @@ INSTALLED_APPS = [
 
     # local
     'users',
-    'movies'
+    'movies',
+
+    # third party
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
