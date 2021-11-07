@@ -1,3 +1,4 @@
+import { Children } from 'react';
 import styled from 'styled-components';
 
 
@@ -45,25 +46,25 @@ const StyledInput = styled.input `
 `;
 
 
-const SearchForm = () => {
+const SearchForm = ({onInputChange, onInputClick}) => {
     return (
         <StyledForm>
-            <SearchLabel />
-            <StyledInput type="text" />
-            <SearchButton />
+            <SearchLabel>Search : </SearchLabel>
+            <StyledInput onChange={onInputChange} type="text" />
+            <SearchButton onButtonClick={onInputClick}>Search</SearchButton>
         </StyledForm>
     )
 }
 
-const SearchButton = () => {
+const SearchButton = ({onButtonClick, children}) => {
     return (
-        <StyledButton type="button">Search</StyledButton>
+        <StyledButton onClick={onButtonClick} type="button">{children}</StyledButton>
     )
 }
 
-const SearchLabel = () => {
+const SearchLabel = ({children}) => {
     return (
-        <StyledLabel for="search">Search : </StyledLabel>
+        <StyledLabel htmlFor="search">{children}</StyledLabel>
     )
 }
 
