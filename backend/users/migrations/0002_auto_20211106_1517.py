@@ -32,3 +32,4 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status'),
         ),
     ]
+# flake8: noqa

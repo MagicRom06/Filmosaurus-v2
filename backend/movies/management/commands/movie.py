@@ -2,7 +2,6 @@ import csv
 import os
 
 import imdb
-
 from movies.models import Movie
 
 
