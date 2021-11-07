@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework import generics
+from django.http import Http404
 
 from .models import Movie
 from .serializers import MovieDetailSerializer, MovieSearchSerializer
@@ -12,9 +13,12 @@ class MoviesList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         search = self.request.query_params.get('search')
-        return Movie.objects.filter(
-            Q(title__icontains=search.capitalize())
-        )
+        if search:
+            return Movie.objects.filter(
+                Q(title__icontains=search.capitalize())
+            )
+        elif not search or search is None:
+            raise Http404("Search Not Found") 
 
 
 class MovieDetail(generics.RetrieveUpdateDestroyAPIView):
