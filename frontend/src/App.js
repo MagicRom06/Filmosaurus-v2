@@ -2,6 +2,7 @@ import Header from './Header/index';
 import axios from 'axios';
 import React from 'react';
 import styled from 'styled-components';
+import Loader from "react-loader-spinner";
 
 
 const StyledForm = styled.form `
@@ -47,6 +48,45 @@ const StyledInput = styled.input `
   }
 `;
 
+const StyledItem = styled.div `
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
+  margin-top:10px;
+`;
+
+const StyledColumn = styled.span `
+  padding: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  a {
+    color: inherite;
+  }
+  width: ${props => props.width};
+`;
+
+const StyledSearchDiv = styled.div `
+  margin: auto;
+  width: 50%;
+  margin-top: 5%;
+`;
+
+const StyledHr = styled.hr `
+  border: 1px solid #171212;
+  opacity: 0.1;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+const StyledSearchCount = styled.span `
+  font-size:20px;
+  font-weight:bold;
+`;
+
+const StyledLoader = styled.p `
+  text-align:center;
+`;
 
 const API_ENDPOINT = 'http://127.0.0.1:8000/api/v1/movies?search=';
 
@@ -79,6 +119,7 @@ const moviesReducer = (state, action) => {
 const App = () => {
 
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [spinnerLoading, setSpinnerLoading] = React.useState(true);
   const [url, setUrl] = React.useState(
     `${API_ENDPOINT}${searchTerm}`
   )
@@ -87,10 +128,7 @@ const App = () => {
     moviesReducer,
     { data: [], isLoading : false, isError: false}
   );
-  console.log(searchTerm)
-  console.log(url)
-  console.log(movies)
-  
+
   const handleFetchMovies = React.useCallback(() => {
     if (!searchTerm) return;
     dispatchMovies({type: 'MOVIES_FETCH_INIT'})
@@ -129,8 +167,8 @@ const App = () => {
       onSearchSubmit={handleSearchSubmit}
     />
     {movies.isError && <p>Something went wrong ...</p>}
-    {movies.isLoading ? ( <p>Loading ...</p> ) : (
-       movies.data.results !== undefined && <List list={movies.data} />
+    {movies.isLoading ? ( <StyledLoader><Loader type="TailSpin" color="#171212" height={60} width={60} visible={spinnerLoading} /></StyledLoader> ) : (
+       movies.data.results !== undefined && <SearchResults list={movies.data} num_results={movies.data.count} />
     )}
     </>
   );
@@ -170,13 +208,32 @@ const InputWithLabel = ({id, value, type, onInputChange, children}) => {
   )
 }
 
+const SearchResults = ({list, num_results}) => {
+  return (
+    <StyledSearchDiv>
+      <StyledSearchCount>{num_results} results</StyledSearchCount>
+      <StyledHr />
+      <List list={list} />
+    </StyledSearchDiv>
+  )
+}
+
 const List = React.memo(({list}) => {
-  console.log(list.results)
   return list.results.map(item => {
     return (
-        <p>{item.title}</p>
+        <div><Item key={item.id} item={item} /></div>
     )
   })
 })
+
+const Item = ({item}) => {
+  return (
+    <StyledItem>
+      <StyledColumn width='60%'>{item.title}</StyledColumn>
+      <StyledColumn width='25%'>{item.year}</StyledColumn>
+      <StyledColumn width='40%'>directed by {item.directors}</StyledColumn>
+    </StyledItem>
+  )
+}
 
 export default App;
