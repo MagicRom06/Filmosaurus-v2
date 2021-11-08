@@ -4,12 +4,15 @@ from .models import Movie
 
 
 class MovieSearchSerializer(serializers.ModelSerializer):
+
+    directors = serializers.StringRelatedField(many=True)
+    countries = serializers.StringRelatedField(many=True)
+
     class Meta:
         fields = (
             'id',
             'title',
             'year',
-            'categories',
             'directors',
             'countries'
         )
