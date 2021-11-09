@@ -12,7 +12,7 @@ class MoviesList(generics.ListCreateAPIView):
     serializer_class = MovieSearchSerializer
 
     def get_queryset(self):
-        search = self.request.query_params.get('search')
+        search = self.request.query_params.get('query')
         if search:
             return Movie.objects.filter(
                 Q(title__icontains=search.capitalize())

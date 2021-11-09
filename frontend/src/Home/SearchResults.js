@@ -20,38 +20,17 @@ const StyledColumn = styled.span `
   width: ${props => props.width};
 `;
 
-const StyledSearchDiv = styled.div `
+const StyledRow = styled.div `
   margin: auto;
   width: 50%;
-  margin-top: 5%;
+  margin-top: 1%;
+  margin-bottom:1%;
 `;
 
-const StyledHr = styled.hr `
-  border: 1px solid #171212;
-  opacity: 0.1;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
-
-const StyledSearchCount = styled.span `
-  font-size:20px;
-  font-weight:bold;
-`;
-
-const SearchResults = ({list, num_results}) => {
-    return (
-      <StyledSearchDiv>
-        <StyledSearchCount>{num_results} results</StyledSearchCount>
-        <StyledHr />
-        <List list={list} />
-      </StyledSearchDiv>
-    )
-}
-  
 const List = React.memo(({list}) => {
-    return list.results.map(item => {
+    return list.map(item => {
       return (
-          <div key={item.id}><Item item={item} /></div>
+          <StyledRow key={item.id}><Item item={item} /></StyledRow>
       )
     })
 })
@@ -66,4 +45,4 @@ const Item = ({item}) => {
     )
 }
 
-export default SearchResults;
+export default List;
