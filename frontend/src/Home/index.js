@@ -25,9 +25,28 @@ const StyledSearchCount = styled.p `
   width: 50%;
   margin-bottom: 1%;
 `;
-  
 
-const API_ENDPOINT = 'http://127.0.0.1:8000/api/v1/search?query=';
+const StyledCenterP = styled.p`
+  text-align: center;
+`;
+  
+const StyledMoreButton = styled.button`
+  background: transparent;
+  border: 1px solid #171212;
+  margin: 10px;
+  padding: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+  width: 15%;
+  &:hover {
+    background: #171212;
+    color: #ffffff;
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+`;
+
 const API_BASE = 'http://127.0.0.1:8000/api/v1';
 const API_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
@@ -59,13 +78,11 @@ const moviesReducer = (state, action) => {
           ...state,
           isLoading: false,
           isError: false,
-          data: 
-            action.payload.page === 1
-              ? action.payload.list
-              : state.data.concat(action.payload.list),
+          data: action.payload.list,
           page: action.payload.page,
           count: action.payload.count,
-          next: action.payload.next
+          next: action.payload.next,
+          previous: action.payload.previous
         };
       case 'MOVIES_FETCH_FAILURE':
         return {
@@ -84,11 +101,11 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [spinnerLoading] = React.useState(true);
     const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)])
-    const [actualSearch, setActualSearch] = React.useState('')
+    const [actualSearch, setActualSearch] = React.useState(undefined)
 
     const [movies, dispatchMovies] = React.useReducer(
         moviesReducer,
-        { data: [], count: 0, next: true, isLoading : false, isError: false}
+        { data: [], count: 0, next: null, previous: null, isLoading : false, isError: false}
     );
 
     const handleFetchMovies = React.useCallback(() => {
@@ -101,6 +118,7 @@ const Home = () => {
             dispatchMovies({
               type: 'MOVIES_FETCH_SUCCESS',
               payload: {
+                previous: result.data.previous,
                 next: result.data.next,
                 list: result.data.results,
                 count: result.data.count,
@@ -130,11 +148,16 @@ const Home = () => {
       setUrls(url);
     }
 
-    const handleMore = () => {
-      console.log(movies.next)
+    const handleNext = () => {
       const searchTerm = extractSearchTerm(urls);
       const page = extractPage(urls)
       handleSearch(searchTerm, page + 1);
+    }
+
+    const handlePrevious = () => {
+      const searchTerm = extractSearchTerm(urls);
+      const page = extractPage(urls)
+      handleSearch(searchTerm, page - 1);
     }
 
     return (
@@ -145,15 +168,7 @@ const Home = () => {
       onSearchInput={handleSearchInput}
       onSearchSubmit={handleSearchSubmit}
     />
-    {movies.data !== undefined &&
-        <>
-        <StyledSearchCount>{movies.count} results for {actualSearch}</StyledSearchCount>
-        <StyledHr />
-        <List
-          list={movies.data}
-        />
-        </>
-    }
+
     {movies.isError && <p>Something went wrong ...</p>}
     {movies.isLoading 
       ? ( <StyledLoader>
@@ -165,9 +180,39 @@ const Home = () => {
               visible={spinnerLoading}
             />
           </StyledLoader> ) 
-      : (movies.next !== null && <button type="button" onClick={handleMore}>More</button>)}
+      : ( 
+          <div>
+            {movies.data !== undefined &&
+                <>
+                {actualSearch !== undefined && <><StyledSearchCount>{movies.count} results for {actualSearch}</StyledSearchCount><StyledHr /></>}
+                <List
+                  list={movies.data}
+                />
+                </>
+            }
+            <StyledCenterP>
+            {movies.previous !== null &&
+              <PaginationButtons move={handlePrevious} text="Previous" />
+            }
+            {movies.next !== null &&
+              <PaginationButtons move={handleNext} text="Next" />
+            }
+          </StyledCenterP>
+          </div>
+        )}
     </>
   );
+}
+
+const PaginationButtons = ({move, text}) => {
+  return (
+    <StyledMoreButton 
+      type="button"
+      onClick={move}
+    >
+      {text}
+    </StyledMoreButton>
+  )
 }
 
 export default Home
