@@ -39,10 +39,14 @@ const StyledLi = styled.li `
     }
 `;
 
+const StyledA = styled.a `
+    color: #171212;
+`;
+
 const Header = () => (
     <StyledNavBar>
         <StyledList>
-            <StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary>
+            <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
             <StyledLi>Sign up</StyledLi>
             <StyledLi>Login</StyledLi>
         </StyledList>

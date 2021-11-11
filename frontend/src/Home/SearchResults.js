@@ -23,18 +23,27 @@ const StyledColumn = styled.span `
 const StyledRow = styled.div `
   margin: auto;
   width: 50%;
-  margin-top: 1%;
-  margin-bottom:1%;
+  padding-top: 2px;
+
+  &:hover {
+    background-color: #171212;
+    color:white;
+  }
+`;
+
+const StyledA = styled.a `
+  text-decoration: none;
+  color: #171212;
 `;
 
 const List = React.memo(({list}) => {
     return list.map(item => {
       return (
-          <StyledRow key={item.id}><Item item={item} /></StyledRow>
+          <StyledA key={item.id} href={`movies/${item.id}`}><StyledRow><Item item={item} /></StyledRow></StyledA>
       )
     })
 })
-  
+
 const Item = ({item}) => {
     return (
       <StyledItem>
