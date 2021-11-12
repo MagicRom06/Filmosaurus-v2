@@ -3,9 +3,54 @@ import Header from "../Header";
 import styled from 'styled-components';
 import React from "react";
 import axios from 'axios';
+import noImage from '../assets/images/noImage.png'
+import Loader from "react-loader-spinner";
 
-const StyledDiv = styled.div `
-    border: 1px solid black;
+const StyledMainDiv = styled.div `
+    margin: auto;
+    width: 70%;
+    display: flex;
+
+    @media only screen and (max-width: 992px) {
+        flex-direction: column;
+        width: 50%;
+    }
+`;
+
+const StyledDetailCol = styled.div `
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+`;
+
+const StyledDetailItem = styled.div `
+    font-size: 18px;
+    padding: 10px;
+
+    &:nth-child(1) {
+        font-weight: bold;
+        font-size: 25px;
+    }
+
+    @media only screen and (max-width: 992px) {
+        text-align: center;
+    }
+`;
+
+const StyledLoader = styled.div `
+    margin: auto;
+    width: 50%;
+    text-align:center;
+`;
+
+const StyledImg = styled.img `
+    width: 340px;
+    height: auto;
+
+    @media only screen and (max-width: 992px) {
+        width: 100%;
+        height: 80%
+    }
 `;
 
 const movieDetailReducer = (state, action) => {
@@ -29,6 +74,8 @@ const movieDetailReducer = (state, action) => {
                 isLoading: false,
                 isError: true,
             }
+        default:
+            return state
     }
 }
 
@@ -36,24 +83,24 @@ const MovieDetails = () => {
 
     let params = useParams();
     const url = `http://127.0.0.1:8000/api/v1/movie/${params.movieId}`
-
-    const [data, dispatchData] = React.useReducer(
+    const [spinnerLoading] = React.useState(true);
+    const [movie, dispatchMovie] = React.useReducer(
         movieDetailReducer,
         {data: [], isLoading: false, isError: false}
     );
-    
-    const handleFetchMovie = React.useCallback(( )=> {
-        dispatchData({type: 'MOVIES_FETCH_INIT'})
+
+    const handleFetchMovie = React.useCallback(()=> {
+        dispatchMovie({type: 'MOVIE_FETCH_INIT'})
         axios
             .get(url)
             .then(result => {
-                dispatchData({
+                dispatchMovie({
                     type: 'MOVIE_FETCH_SUCCESS',
                     payload: result.data,
                 })
             })
             .catch(() => {
-                dispatchData({type: 'MOVIE_FETCH_FAILURE'})
+                dispatchMovie({type: 'MOVIE_FETCH_FAILURE'})
             })
     }, [url])
 
@@ -64,9 +111,45 @@ const MovieDetails = () => {
     return (
         <>
         <Header />
-        <StyledDiv>
-        <h1>Movie Details {params.movieId}</h1>
-        </StyledDiv>
+        <StyledMainDiv>
+            {movie.isError && <p>Something went wrong ...</p>}
+            {movie.isLoading 
+                ? ( <StyledLoader>
+                        <Loader
+                        type="TailSpin"
+                        color="#171212"
+                        height={60}
+                        width={60}
+                        visible={spinnerLoading}
+                        />
+                    </StyledLoader> ) 
+                : (
+                    <>
+                        <StyledImg src={noImage} />
+                        <StyledDetailCol>
+                            <Detail movie={movie.data} />
+                        </StyledDetailCol>
+                    </>
+                )
+            }
+            </StyledMainDiv>)
+        </>
+    )
+}
+
+const Detail = ({movie}) => {
+    return (
+        <>
+            {movie.length !== 0 && 
+            <>
+                <StyledDetailItem>{movie.title} ({movie.year})</StyledDetailItem>
+                <StyledDetailItem>Directed by {movie.directors} </StyledDetailItem>
+                <StyledDetailItem>{movie.categories.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
+                <StyledDetailItem>{movie.casts.map((item, i) => <span key={i}>{item} - </span>)}</StyledDetailItem>
+                <StyledDetailItem>{movie.countries.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
+                <StyledDetailItem>{movie.plot}</StyledDetailItem>
+            </>
+            }
         </>
     )
 }
