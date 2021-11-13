@@ -38,3 +38,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'countries'
         )
         model = Movie
+
+
+class MovieGetImageSerializer(serializers.Serializer):
+    image = serializers.CharField()
