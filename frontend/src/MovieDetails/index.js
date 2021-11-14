@@ -8,7 +8,7 @@ import Loader from "react-loader-spinner";
 
 const StyledMainDiv = styled.div `
     margin: auto;
-    width: 70%;
+    width: 65%;
     display: flex;
 
     @media only screen and (max-width: 992px) {
@@ -44,7 +44,17 @@ const StyledLoader = styled.div `
 `;
 
 const StyledImg = styled.img `
-    width: 340px;
+    width: 300px;
+    height: auto;
+
+    @media only screen and (max-width: 992px) {
+        width: 100%;
+        height: 80%
+    }
+`;
+
+const StyledImgDiv = styled.div `
+    width: 300px;
     height: auto;
 
     @media only screen and (max-width: 992px) {
@@ -88,8 +98,10 @@ const MovieDetails = () => {
         movieDetailReducer,
         {data: [], isLoading: false, isError: false}
     );
+    const [image, setImage] = React.useState(undefined)
 
-    const handleFetchMovie = React.useCallback(()=> {
+
+    const handleFetchMovie = async () => {
         dispatchMovie({type: 'MOVIE_FETCH_INIT'})
         axios
             .get(url)
@@ -102,12 +114,29 @@ const MovieDetails = () => {
             .catch(() => {
                 dispatchMovie({type: 'MOVIE_FETCH_FAILURE'})
             })
-    }, [url])
+    }
+
+    const handleFetchImage = (title, year) => {
+        movie.data.length !== 0  &&
+        axios
+            .get(`http://127.0.0.1:8000/api/v1/image/get?movie=${title}&year=${year}`)
+            .then(result => {
+                setImage(result.data.image)
+            })
+            .catch(e => {
+                console.log(e);
+            })
+    }
 
     React.useEffect(() => {
         handleFetchMovie()
-    }, [handleFetchMovie])
+    }, [])
 
+    React.useEffect(() => {
+        handleFetchImage(movie.data.title, movie.data.year)
+    }, [movie.data])
+
+    console.log(image)
     return (
         <>
         <Header />
@@ -124,8 +153,22 @@ const MovieDetails = () => {
                         />
                     </StyledLoader> ) 
                 : (
-                    <>
-                        <StyledImg src={noImage} />
+                    <>  
+                        <StyledImgDiv>
+                        {image === undefined ? (
+                            <StyledLoader>
+                                <Loader
+                                type="TailSpin"
+                                color="#171212"
+                                height={60}
+                                width={60}
+                                visible={spinnerLoading}
+                                />
+                            </StyledLoader>
+                        ) : (
+                            <StyledImg src={image} />
+                        )}
+                        </StyledImgDiv>
                         <StyledDetailCol>
                             <Detail movie={movie.data} />
                         </StyledDetailCol>
