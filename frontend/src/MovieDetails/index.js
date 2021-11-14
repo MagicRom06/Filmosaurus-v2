@@ -53,16 +53,6 @@ const StyledImg = styled.img `
     }
 `;
 
-const StyledImgDiv = styled.div `
-    width: 300px;
-    height: auto;
-
-    @media only screen and (max-width: 992px) {
-        width: 100%;
-        height: 80%
-    }
-`;
-
 const movieDetailReducer = (state, action) => {
     switch (action.type) {
         case 'MOVIE_FETCH_INIT':
@@ -154,7 +144,7 @@ const MovieDetails = () => {
                     </StyledLoader> ) 
                 : (
                     <>  
-                        <StyledImgDiv>
+                        <>
                         {image === undefined ? (
                             <StyledLoader>
                                 <Loader
@@ -168,7 +158,7 @@ const MovieDetails = () => {
                         ) : (
                             <StyledImg src={image} />
                         )}
-                        </StyledImgDiv>
+                        </>
                         <StyledDetailCol>
                             <Detail movie={movie.data} />
                         </StyledDetailCol>
