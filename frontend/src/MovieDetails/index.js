@@ -94,7 +94,6 @@ const MovieDetails = () => {
     );
     const [image, setImage] = React.useState(undefined)
 
-
     const handleFetchMovie = async () => {
         dispatchMovie({type: 'MOVIE_FETCH_INIT'})
         axios
@@ -118,7 +117,7 @@ const MovieDetails = () => {
                 setImage(result.data.image)
             })
             .catch(e => {
-                console.log(e);
+                setImage('error')
             })
     }
 
@@ -159,7 +158,7 @@ const MovieDetails = () => {
                                 />
                             </StyledLoader>
                         ) : (
-                            image === null ? (
+                            image === null || image === 'error' ? (
                                 <StyledImg src={noImage} />
                             ) : (
                                 <StyledImg src={image} />
