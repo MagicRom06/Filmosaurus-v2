@@ -41,10 +41,13 @@ class MovieGetImage(generics.ListCreateAPIView):
         movie = self.request.query_params.get('movie')
         year = self.request.query_params.get('year')
         search = ia.search_movie(movie)
-        while i < len(search):
-            if 'year' in search[i].keys():
-                if str(search[i]['year']) == year \
-                       and search[i]['kind'] == 'movie':
-                    results.append((search[i]['full-size cover url']))
-            i += 1
-        return Response({'image': results[0]})
+        try:
+            while i < len(search):
+                if 'year' in search[i].keys():
+                    if str(search[i]['year']) == year \
+                        and search[i]['kind'] == 'movie':
+                        results.append((search[i]['full-size cover url']))
+                i += 1
+            return Response({'image': results[0]})
+        except Exception:
+            return Response({'image': None}) 

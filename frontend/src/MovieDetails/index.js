@@ -25,7 +25,6 @@ const StyledDetailCol = styled.div `
 
 const StyledDetailItem = styled.div `
     font-size: 18px;
-    padding: 10px;
 
     &:nth-child(1) {
         font-weight: bold;
@@ -51,6 +50,11 @@ const StyledImg = styled.img `
         width: 100%;
         height: 80%
     }
+`;
+
+const StyledTitleRow = styled.div `
+    margin-top: 25px;
+    font-weight: bold;
 `;
 
 const movieDetailReducer = (state, action) => {
@@ -126,7 +130,6 @@ const MovieDetails = () => {
         handleFetchImage(movie.data.title, movie.data.year)
     }, [movie.data])
 
-    console.log(image)
     return (
         <>
         <Header />
@@ -156,7 +159,11 @@ const MovieDetails = () => {
                                 />
                             </StyledLoader>
                         ) : (
-                            <StyledImg src={image} />
+                            image === null ? (
+                                <StyledImg src={noImage} />
+                            ) : (
+                                <StyledImg src={image} />
+                            )
                         )}
                         </>
                         <StyledDetailCol>
@@ -177,9 +184,13 @@ const Detail = ({movie}) => {
             <>
                 <StyledDetailItem>{movie.title} ({movie.year})</StyledDetailItem>
                 <StyledDetailItem>Directed by {movie.directors} </StyledDetailItem>
+                <StyledTitleRow>Categories : </StyledTitleRow>
                 <StyledDetailItem>{movie.categories.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
+                <StyledTitleRow>Actors : </StyledTitleRow>
                 <StyledDetailItem>{movie.casts.map((item, i) => <span key={i}>{item} - </span>)}</StyledDetailItem>
+                <StyledTitleRow>Countries : </StyledTitleRow>
                 <StyledDetailItem>{movie.countries.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
+                <StyledTitleRow>Plot : </StyledTitleRow>
                 <StyledDetailItem>{movie.plot}</StyledDetailItem>
             </>
             }
