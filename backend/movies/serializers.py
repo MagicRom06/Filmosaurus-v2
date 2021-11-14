@@ -42,3 +42,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 
 class MovieGetImageSerializer(serializers.Serializer):
     image = serializers.CharField()
+
+
+class MovieGetRatingSerializer(serializers.Serializer):
+    ratings = serializers.CharField()

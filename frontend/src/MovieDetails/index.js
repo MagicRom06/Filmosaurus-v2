@@ -55,6 +55,10 @@ const StyledImg = styled.img `
 const StyledTitleRow = styled.div `
     margin-top: 25px;
     font-weight: bold;
+
+    @media only screen and (max-width: 992px) {
+        text-align: center;
+    }
 `;
 
 const movieDetailReducer = (state, action) => {
@@ -116,7 +120,7 @@ const MovieDetails = () => {
             .then(result => {
                 setImage(result.data.image)
             })
-            .catch(e => {
+            .catch(() => {
                 setImage('error')
             })
     }
@@ -147,7 +151,7 @@ const MovieDetails = () => {
                 : (
                     <>  
                         <>
-                        {image === undefined ? (
+                        {image === undefined && !movie.isError ? (
                             <StyledLoader>
                                 <Loader
                                 type="TailSpin"
@@ -183,13 +187,13 @@ const Detail = ({movie}) => {
             <>
                 <StyledDetailItem>{movie.title} ({movie.year})</StyledDetailItem>
                 <StyledDetailItem>Directed by {movie.directors} </StyledDetailItem>
-                <StyledTitleRow>Categories : </StyledTitleRow>
+                <StyledTitleRow>Categories</StyledTitleRow>
                 <StyledDetailItem>{movie.categories.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
-                <StyledTitleRow>Actors : </StyledTitleRow>
+                <StyledTitleRow>Actors</StyledTitleRow>
                 <StyledDetailItem>{movie.casts.map((item, i) => <span key={i}>{item} - </span>)}</StyledDetailItem>
-                <StyledTitleRow>Countries : </StyledTitleRow>
+                <StyledTitleRow>Countries</StyledTitleRow>
                 <StyledDetailItem>{movie.countries.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
-                <StyledTitleRow>Plot : </StyledTitleRow>
+                <StyledTitleRow>Plot</StyledTitleRow>
                 <StyledDetailItem>{movie.plot}</StyledDetailItem>
             </>
             }

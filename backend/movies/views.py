@@ -4,11 +4,13 @@ from django.http import Http404
 from rest_framework.response import Response
 from imdb import IMDb
 
+from .utils import Allocine, Imdb_ratings, Rating
 from .models import Movie
 from .serializers import \
     MovieDetailSerializer, \
     MovieSearchSerializer, \
-    MovieGetImageSerializer
+    MovieGetImageSerializer, \
+    MovieGetRatingSerializer
 
 # Create your views here.
 
@@ -51,3 +53,13 @@ class MovieGetImage(generics.ListCreateAPIView):
             return Response({'image': results[0]})
         except Exception:
             return Response({'image': None}) 
+
+
+class MovieGetRating(generics.ListCreateAPIView):
+    serializer_class = MovieGetRatingSerializer
+
+    def get(self, request):
+        movie = self.request.query_params.get('movie')
+        year = self.request.query_params.get('year')
+        rating = Rating.load(movie, year)
+        return Response({'ratings': rating})
