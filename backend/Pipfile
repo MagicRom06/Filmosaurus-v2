@@ -12,6 +12,8 @@ flake8 = "*"
 imdbpy = "*"
 djangorestframework = "==3.12.4"
 django-cors-headers = "*"
+requests = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 
