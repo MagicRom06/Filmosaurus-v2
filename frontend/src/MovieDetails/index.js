@@ -61,6 +61,35 @@ const StyledTitleRow = styled.div `
     }
 `;
 
+const StyledRateMainDiv = styled.div `
+    margin: auto;
+    width: 65%;
+    display: flex;
+    padding: 5px;
+`;
+
+const StyledRateBlock = styled.div `
+    width: 50%;
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+`;
+
+const StyledRateItem = styled.div `
+    display: flex;
+    width: 50%;
+    margin:auto;
+`;
+
+const StyledRateRow = styled.div `
+    margin: 20px;
+`;
+
+const StyledSourceLogo = styled.div `
+    font-size: 50px;
+`;
+
 const movieDetailReducer = (state, action) => {
     switch (action.type) {
         case 'MOVIE_FETCH_INIT':
@@ -97,6 +126,7 @@ const MovieDetails = () => {
         {data: [], isLoading: false, isError: false}
     );
     const [image, setImage] = React.useState(undefined)
+    const [rates, setRates] = React.useState(undefined)
 
     const handleFetchMovie = async () => {
         dispatchMovie({type: 'MOVIE_FETCH_INIT'})
@@ -125,12 +155,28 @@ const MovieDetails = () => {
             })
     }
 
+    const handleFetchRates = (title, year) => {
+        movie.data.length !== 0  &&
+        axios
+            .get(`http://127.0.0.1:8000/api/v1/ratings/load?movie=${title}&year=${year}`)
+            .then(result => {
+                setRates(result.data.ratings)
+            })
+            .catch(() => {
+                setRates('error')
+            })
+    }
+
     React.useEffect(() => {
         handleFetchMovie()
     }, [])
 
     React.useEffect(() => {
         handleFetchImage(movie.data.title, movie.data.year)
+    }, [movie.data])
+
+    React.useEffect(() => {
+        handleFetchRates(movie.data.title, movie.data.year)
     }, [movie.data])
 
     return (
@@ -176,6 +222,19 @@ const MovieDetails = () => {
                 )
             }
             </StyledMainDiv>)
+            <>
+            {rates === undefined && !movie.isError
+                ? (<StyledLoader>
+                    <Loader
+                    type="TailSpin"
+                    color="#171212"
+                    height={60}
+                    width={60}
+                    visible={spinnerLoading}
+                    />
+                </StyledLoader>)
+                : (<Rates ratings={rates} />)}
+            </>
         </>
     )
 }
@@ -198,6 +257,25 @@ const Detail = ({movie}) => {
             </>
             }
         </>
+    )
+}
+
+const Rates = ({ratings}) => {
+    console.log(ratings)
+    return (
+        <StyledRateMainDiv>
+            <StyledRateBlock>
+                <StyledSourceLogo><span className="iconify" data-icon="cib:allocine"></span></StyledSourceLogo>
+                <StyledRateItem>
+                    <StyledRateRow>Press {ratings[0].allocine.press}</StyledRateRow>
+                    <StyledRateRow>Spectators {ratings[0].allocine.spectator}</StyledRateRow>
+                </StyledRateItem>
+            </StyledRateBlock>
+            <StyledRateBlock>
+                <StyledSourceLogo><i className="fab fa-imdb"></i></StyledSourceLogo>
+                <StyledRateRow>{ratings[1].imdb}</StyledRateRow>
+            </StyledRateBlock>
+        </StyledRateMainDiv>
     )
 }
 

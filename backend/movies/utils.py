@@ -17,7 +17,7 @@ class Rating:
 
 
 class Allocine(Rating):
-    
+
     @staticmethod
     def load(title, year):
         search = Allocine.get_search(title)
@@ -98,9 +98,10 @@ class Imdb_ratings:
         movie_id = list()
         search = ia.search_movie(title)
         while i < len(search):
-            if str(search[i]['year']) == year and search[i]['kind'] == 'movie':
-                movie_id.append(search[i].getID())
-            i += 1
+            if search[i]['year']:
+                if str(search[i]['year']) == year and search[i]['kind'] == 'movie':
+                    movie_id.append(search[i].getID())
+                i += 1
         return movie_id
 
     @staticmethod
