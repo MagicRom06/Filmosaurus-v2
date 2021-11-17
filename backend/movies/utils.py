@@ -98,10 +98,10 @@ class Imdb_ratings:
         movie_id = list()
         search = ia.search_movie(title)
         while i < len(search):
-            if search[i]['year']:
+            if 'year' in search[i].keys():
                 if str(search[i]['year']) == year and search[i]['kind'] == 'movie':
                     movie_id.append(search[i].getID())
-                i += 1
+            i += 1
         return movie_id
 
     @staticmethod

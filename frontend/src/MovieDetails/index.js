@@ -59,6 +59,11 @@ const StyledTitleRow = styled.div `
     @media only screen and (max-width: 992px) {
         text-align: center;
     }
+
+    &:nth-child(1) {
+        font-weight: bold;
+        font-size: 25px;
+    }
 `;
 
 const StyledRateMainDiv = styled.div `
@@ -66,6 +71,11 @@ const StyledRateMainDiv = styled.div `
     width: 65%;
     display: flex;
     padding: 5px;
+
+    @media only screen and (max-width: 992px) {
+        flex-direction: column;
+        margin: auto;
+    }
 `;
 
 const StyledRateBlock = styled.div `
@@ -74,6 +84,11 @@ const StyledRateBlock = styled.div `
     display: flex;
     flex-direction: column;
     padding: 5px;
+
+    @media only screen and (max-width: 992px) {
+        margin: auto;
+        width: auto;
+    }
 `;
 
 const StyledRateItem = styled.div `
@@ -84,10 +99,25 @@ const StyledRateItem = styled.div `
 
 const StyledRateRow = styled.div `
     margin: 20px;
+    font-weight: bold;
+    font-size: 15px;
+
+    span {
+        border-bottom: 1px solid #171212;
+        padding: 5px;
+    }
 `;
 
 const StyledSourceLogo = styled.div `
     font-size: 50px;
+`;
+
+const StyledHr = styled.hr `
+    width: 65%;
+    margin: auto;
+    border: 1px solid #171212;
+    margin-bottom: 10px;
+    opacity: 0.2;
 `;
 
 const movieDetailReducer = (state, action) => {
@@ -233,7 +263,12 @@ const MovieDetails = () => {
                     visible={spinnerLoading}
                     />
                 </StyledLoader>)
-                : (<Rates ratings={rates} />)}
+                : ( 
+                    <>
+                    <StyledHr />
+                    <Rates ratings={rates} />
+                    </>)
+                }
             </>
         </>
     )
