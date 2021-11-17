@@ -20,6 +20,12 @@ class MovieSearchSerializer(serializers.ModelSerializer):
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
+
+    directors = serializers.StringRelatedField(many=True)
+    countries = serializers.StringRelatedField(many=True)
+    casts = serializers.StringRelatedField(many=True)
+    categories = serializers.StringRelatedField(many=True)
+
     class Meta:
         fields = (
             'id',
@@ -32,3 +38,11 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'countries'
         )
         model = Movie
+
+
+class MovieGetImageSerializer(serializers.Serializer):
+    image = serializers.CharField()
+
+
+class MovieGetRatingSerializer(serializers.Serializer):
+    ratings = serializers.CharField()
