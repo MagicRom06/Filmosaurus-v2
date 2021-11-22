@@ -14,6 +14,7 @@ djangorestframework = "==3.12.4"
 django-cors-headers = "*"
 requests = "*"
 beautifulsoup4 = "*"
+dj-rest-auth = "*"
 
 [dev-packages]
 

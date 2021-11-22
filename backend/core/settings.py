@@ -49,7 +49,9 @@ INSTALLED_APPS = [
 
     # third party
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'dj_rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +154,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
 
