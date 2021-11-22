@@ -1,16 +1,14 @@
-from django.db.models import Q
-from rest_framework import generics
-from django.http import Http404
-from rest_framework.response import Response
 from imdb import IMDb
 
-from .utils import Allocine, Imdb_ratings, Rating
+from django.db.models import Q
+from django.http import Http404
+from rest_framework import generics
+from rest_framework.response import Response
+
 from .models import Movie
-from .serializers import \
-    MovieDetailSerializer, \
-    MovieSearchSerializer, \
-    MovieGetImageSerializer, \
-    MovieGetRatingSerializer
+from .serializers import (MovieDetailSerializer, MovieGetImageSerializer,
+                          MovieGetRatingSerializer, MovieSearchSerializer)
+from .utils import Rating
 
 # Create your views here.
 
@@ -46,13 +44,13 @@ class MovieGetImage(generics.ListCreateAPIView):
         try:
             while i < len(search):
                 if 'year' in search[i].keys():
-                    if str(search[i]['year']) == year \
-                        and search[i]['kind'] == 'movie':
+                    if str(search[i]['year']) == year and \
+                           search[i]['kind'] == 'movie':
                         results.append((search[i]['full-size cover url']))
                 i += 1
             return Response({'image': results[0]})
         except Exception:
-            return Response({'image': None}) 
+            return Response({'image': None})
 
 
 class MovieGetRating(generics.ListCreateAPIView):
