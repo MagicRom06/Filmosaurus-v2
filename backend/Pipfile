@@ -15,6 +15,7 @@ django-cors-headers = "*"
 requests = "*"
 beautifulsoup4 = "*"
 dj-rest-auth = "*"
+django-allauth = "*"
 
 [dev-packages]
 
