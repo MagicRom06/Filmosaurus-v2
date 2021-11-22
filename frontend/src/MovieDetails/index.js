@@ -211,7 +211,6 @@ const MovieDetails = () => {
 
     return (
         <>
-        <Header />
         <StyledMainDiv>
             {movie.isError && <p>Something went wrong ...</p>}
             {movie.isLoading 

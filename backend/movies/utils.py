@@ -1,7 +1,6 @@
 import requests
-
-from imdb import IMDb
 from bs4 import BeautifulSoup
+from imdb import IMDb
 
 
 class Rating:
@@ -27,7 +26,8 @@ class Allocine(Rating):
 
     @staticmethod
     def get_search(title):
-        url = f"""https://www.allocine.fr/_/autocomplete/{title.capitalize()}"""
+        url = (f"""https://www.allocine.'
+               'fr/_/autocomplete/{title.capitalize()}""")
         response = requests.get(url)
         return response.json()
 
@@ -38,14 +38,15 @@ class Allocine(Rating):
             if elt['entity_type'] == 'movie' and \
                (elt['data']['year'] == year or
                elt['data']['year'] == str(int(year) - 1)):
-               movie_requested_id.append(elt['entity_id'])
+                movie_requested_id.append(elt['entity_id'])
         return movie_requested_id
 
     @staticmethod
     def get_rating(movie_id):
         print(movie_id)
         if len(movie_id) > 0:
-            url = """https://www.allocine.fr/film/fichefilm_gen_cfilm={}.html""".format(movie_id[0])
+            url = ("""https://www.allocine.fr/film/'
+                   'fichefilm_gen_cfilm={}.html""").format(movie_id[0])
             html_page = requests.get(url)
             soup = BeautifulSoup(html_page.text, 'html.parser')
             type_critic = soup.find_all("span", "rating-title")
@@ -99,7 +100,8 @@ class Imdb_ratings:
         search = ia.search_movie(title)
         while i < len(search):
             if 'year' in search[i].keys():
-                if str(search[i]['year']) == year and search[i]['kind'] == 'movie':
+                if str(search[i]['year']) == year and \
+                       search[i]['kind'] == 'movie':
                     movie_id.append(search[i].getID())
             i += 1
         return movie_id

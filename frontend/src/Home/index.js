@@ -162,7 +162,6 @@ const Home = () => {
 
     return (
         <>
-    <Header />
     <SearchForm
       searchTerm={searchTerm}
       onSearchInput={handleSearchInput}
