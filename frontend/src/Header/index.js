@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 
@@ -47,7 +48,7 @@ const Header = () => (
     <StyledNavBar>
         <StyledList>
             <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
-            <StyledLi>Sign up</StyledLi>
+            <StyledLi><Link to="accounts/register">Sign up</Link></StyledLi>
             <StyledLi>Login</StyledLi>
         </StyledList>
     </StyledNavBar>
