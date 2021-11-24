@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import Header from "../Header";
 import styled from 'styled-components';
 import React from "react";
 import axios from 'axios';

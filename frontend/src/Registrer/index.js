@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 const StyledMainDiv = styled.div `
@@ -45,22 +46,85 @@ const StyledHeadlinePrimary = styled.h1 `
     letter-spacing: 2px;
 `;
 
+const StyledButton = styled.button `
+  background: transparent;
+  border: 1px solid #171212;
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+  &:hover {
+    background: #171212;
+    color: #ffffff;
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+`;
+
 const Register = () => {
+
+    const [email, setEmail] = React.useState('');
+    const [password1, setPassword1] = React.useState('');
+    const [password2, setPassword2] = React.useState('');
+
+    const handleEmailChange = e => {
+      setEmail(e.target.value);
+    };
+
+    const handlePassword1Change = e => {
+      setPassword1(e.target.value);
+    };
+
+    const handlePassword2Change = e => {
+      setPassword2(e.target.value);
+    };
+
+    const handleSubmit = e => {
+      const data = {
+        'email' : e.target.email.value,
+        'password1' : e.target.password1.value,
+        'password2' : e.target.password2.value
+      }
+      e.preventDefault();
+    }
+
     return (
         <StyledMainDiv>
             <StyledHeadlinePrimary>Register</StyledHeadlinePrimary>
-            <StyledForm>
+            <StyledForm onSubmit={handleSubmit}>
                 <StyledFormRow>
                 <StyledLabel>Email : </StyledLabel>
-                <StyledInput width="405px" type="text" />
+                <StyledInput
+                  width="81%"
+                  type="text"
+                  name="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
                 </StyledFormRow>
                 <StyledFormRow>
                 <StyledLabel>Password : </StyledLabel>
-                <StyledInput width="360px" type="password" />
+                <StyledInput
+                  width="75%"
+                  type="password"
+                  name="password1"
+                  value={password1}
+                  onChange={handlePassword1Change}
+                />
                 </StyledFormRow>
                 <StyledFormRow>
                 <StyledLabel>Password again : </StyledLabel>
-                <StyledInput width="300px" type="password" />
+                <StyledInput
+                  width="66%"
+                  type="password"
+                  name="password2"
+                  value={password2}
+                  onChange={handlePassword2Change}
+                />
+                </StyledFormRow>
+                <StyledFormRow>
+                    <StyledButton type="submit">Register</StyledButton>
                 </StyledFormRow>
             </StyledForm>
         </StyledMainDiv>
