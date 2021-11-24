@@ -26,8 +26,7 @@ class Allocine(Rating):
 
     @staticmethod
     def get_search(title):
-        url = (f"""https://www.allocine.'
-               'fr/_/autocomplete/{title.capitalize()}""")
+        url = (f"""https://www.allocine.fr/_/autocomplete/{title.capitalize()}""")
         response = requests.get(url)
         return response.json()
 
@@ -45,8 +44,7 @@ class Allocine(Rating):
     def get_rating(movie_id):
         print(movie_id)
         if len(movie_id) > 0:
-            url = ("""https://www.allocine.fr/film/'
-                   'fichefilm_gen_cfilm={}.html""").format(movie_id[0])
+            url = ("""https://www.allocine.fr/film/fichefilm_gen_cfilm={}.html""").format(movie_id[0])
             html_page = requests.get(url)
             soup = BeautifulSoup(html_page.text, 'html.parser')
             type_critic = soup.find_all("span", "rating-title")
