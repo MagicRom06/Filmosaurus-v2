@@ -1,12 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import Loader from "react-loader-spinner";
 
+const StyledContainer = styled.div `
+  position: relative;
+`;
 const StyledMainDiv = styled.div `
     margin: auto;
     width: 50%;
     text-align:center;
     display: flex;
     flex-direction: column;
+    position: absolute;
+    left: 25%;
+
+    @media only screen and (max-width: 992px) {
+      width: 100%;
+      left: 0;
+    }
 `;
 
 const StyledForm = styled.form `
@@ -23,9 +35,17 @@ const StyledFormRow = styled.div `
     padding: 20px;
 `;
 
+const StyledLoader = styled.div `
+  text-align:center;
+`;
+
 const StyledLabel = styled.label `
   padding-left: 5px;
   font-size: 24px;
+
+  @media only screen and (max-width: 992px) {
+    font-size: 15px;
+  }
 `;
 
 const StyledInput = styled.input `
@@ -62,11 +82,64 @@ const StyledButton = styled.button `
   }
 `;
 
+const StyledModal = styled.div `
+  background-color: transparent;
+  z-index: 9;
+  margin: 20px;
+  height: 520px;
+  text-align: center;
+
+  p {
+    margin: 0;
+    width: 10%;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    background-color: #171212;
+    opacity: 0.3;
+    padding: 10px;
+  }
+`;
+
+const endpoint = 'http://127.0.0.1:8000/api/v1/dj-rest-auth/registration/'
+
+const registerReducer = (state, action) => {
+  switch (action.type) {
+    case 'REGISTER_POST_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      };
+    case 'REGISTER_POST_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload.key
+      };
+    case 'REGISTER_POST_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true
+      };
+    default:
+      return state
+  }
+}
+
 const Register = () => {
 
     const [email, setEmail] = React.useState('');
     const [password1, setPassword1] = React.useState('');
     const [password2, setPassword2] = React.useState('');
+    const [register, dispatchRegister] = React.useReducer(
+      registerReducer,
+      {data: null, isError: false, isLoading: false}
+    )
 
     const handleEmailChange = e => {
       setEmail(e.target.value);
@@ -86,10 +159,29 @@ const Register = () => {
         'password1' : e.target.password1.value,
         'password2' : e.target.password2.value
       }
+      handlePostRegister(data);
       e.preventDefault();
     }
 
+    const handlePostRegister = data => {
+      dispatchRegister({type: 'REGISTER_POST_INIT'})
+      axios.post(endpoint, data)
+        .then(res => {
+          dispatchRegister({
+            type: 'REGISTER_POST_SUCCESS',
+            payload: res.data
+          });
+        })
+        .catch(e => {
+          dispatchRegister({
+            type: 'REGISTER_POST_SUCCESS',
+            payload: e.response
+          })
+        });
+    }
+
     return (
+      <StyledContainer>
         <StyledMainDiv>
             <StyledHeadlinePrimary>Register</StyledHeadlinePrimary>
             <StyledForm onSubmit={handleSubmit}>
@@ -128,7 +220,29 @@ const Register = () => {
                 </StyledFormRow>
             </StyledForm>
         </StyledMainDiv>
+      </StyledContainer>
     )
+}
+
+const Modal = () => {
+
+  const [, spinnerLoading] = React.useState(true);
+
+  return (
+    <StyledModal>
+      <p>
+      <StyledLoader>
+            <Loader
+              type="TailSpin"
+              color="white"
+              height={60}
+              width={60}
+              visible={spinnerLoading}
+            />
+          </StyledLoader> 
+      </p>
+    </StyledModal>
+  )
 }
 
 export default Register;

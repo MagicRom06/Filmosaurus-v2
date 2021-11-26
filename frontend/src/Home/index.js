@@ -1,4 +1,3 @@
-import Header from '../Header/index';
 import axios from 'axios';
 import React from 'react';
 import styled from 'styled-components';
@@ -99,7 +98,7 @@ const moviesReducer = (state, action) => {
 const Home = () => {
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const [spinnerLoading] = React.useState(true);
+    const [, spinnerLoading] = React.useState(true);
     const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)])
     const [actualSearch, setActualSearch] = React.useState(undefined)
 
