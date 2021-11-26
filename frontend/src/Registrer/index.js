@@ -89,10 +89,10 @@ const StyledModal = styled.div `
   height: 520px;
   text-align: center;
 
-  p {
+  span {
     margin: 0;
     width: 10%;
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -111,20 +111,23 @@ const registerReducer = (state, action) => {
       return {
         ...state,
         isLoading: true,
-        isError: false
+        isError: false,
+        isSuccess: false
       };
     case 'REGISTER_POST_SUCCESS':
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.key
+        data: action.payload.key,
+        isSuccess: true
       };
     case 'REGISTER_POST_FAILURE':
       return {
         ...state,
         isLoading: false,
-        isError: true
+        isError: true,
+        isSuccess: false
       };
     default:
       return state
@@ -138,7 +141,7 @@ const Register = () => {
     const [password2, setPassword2] = React.useState('');
     const [register, dispatchRegister] = React.useReducer(
       registerReducer,
-      {data: null, isError: false, isLoading: false}
+      {data: null, isError: false, isLoading: false, isSuccess: false}
     )
 
     const handleEmailChange = e => {
@@ -165,7 +168,8 @@ const Register = () => {
 
     const handlePostRegister = data => {
       dispatchRegister({type: 'REGISTER_POST_INIT'})
-      axios.post(endpoint, data)
+      setTimeout(() => {
+        axios.post(endpoint, data)
         .then(res => {
           dispatchRegister({
             type: 'REGISTER_POST_SUCCESS',
@@ -174,10 +178,11 @@ const Register = () => {
         })
         .catch(e => {
           dispatchRegister({
-            type: 'REGISTER_POST_SUCCESS',
+            type: 'REGISTER_POST_FAILURE',
             payload: e.response
           })
         });
+      }, 3000)
     }
 
     return (
@@ -220,28 +225,33 @@ const Register = () => {
                 </StyledFormRow>
             </StyledForm>
         </StyledMainDiv>
+        {register.isLoading && (
+          <Modal>
+            <StyledLoader>
+              <Loader
+                type="TailSpin"
+                color="white"
+                height={60}
+                width={60}
+                visible={true}
+              />
+            </StyledLoader> 
+        </Modal>
+        )}
       </StyledContainer>
     )
 }
 
-const Modal = () => {
-
-  const [, spinnerLoading] = React.useState(true);
+const Modal = ({children}) => {
 
   return (
+    <>
     <StyledModal>
-      <p>
-      <StyledLoader>
-            <Loader
-              type="TailSpin"
-              color="white"
-              height={60}
-              width={60}
-              visible={spinnerLoading}
-            />
-          </StyledLoader> 
-      </p>
+      <span>
+      {children}
+      </span>
     </StyledModal>
+    </>
   )
 }
 
