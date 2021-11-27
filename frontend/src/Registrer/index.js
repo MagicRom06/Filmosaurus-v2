@@ -196,9 +196,6 @@ const Register = ({getToken}) => {
             type: 'REGISTER_POST_FAILURE',
             payload: e.response
           })
-          setTimeout(() => {
-            cleanForm();
-          }, 2000)
         });
       }, 3000)
     }
@@ -210,6 +207,10 @@ const Register = ({getToken}) => {
       setEmail('')
       setPassword1('')
       setPassword2('')
+    }
+
+    const handleErrorModalClick = () => {
+      cleanForm();
     }
 
     return (
@@ -248,7 +249,7 @@ const Register = ({getToken}) => {
                 />
                 </StyledFormRow>
                 <StyledFormRow>
-                    <StyledButton type="submit">Register</StyledButton>
+                    <StyledButton disabled={!email || !password1 || !password2} type="submit">Register</StyledButton>
                 </StyledFormRow>
             </StyledForm>
         </StyledMainDiv>
@@ -272,7 +273,7 @@ const Register = ({getToken}) => {
         )}
         {register.isError && (
           <Modal>
-            <img src={failed} width={70} height={70} />
+            <img onClick={handleErrorModalClick} src={failed} width={70} height={70} />
           </Modal>
         )}
       </StyledContainer>
