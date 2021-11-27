@@ -184,6 +184,9 @@ const Register = () => {
             type: 'REGISTER_POST_SUCCESS',
             payload: res.data
           });
+          setTimeout(() => {
+            window.location.href = "/"
+          }, 2000)
         })
         .catch(e => {
           dispatchRegister({
