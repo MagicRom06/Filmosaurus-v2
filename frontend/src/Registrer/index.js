@@ -143,7 +143,7 @@ const registerReducer = (state, action) => {
   }
 }
 
-const Register = () => {
+const Register = ({getToken}) => {
 
     const [email, setEmail] = React.useState('');
     const [password1, setPassword1] = React.useState('');
@@ -184,9 +184,7 @@ const Register = () => {
             type: 'REGISTER_POST_SUCCESS',
             payload: res.data
           });
-          setTimeout(() => {
-            window.location.href = "/"
-          }, 2000)
+          getToken(res.data.key);
         })
         .catch(e => {
           dispatchRegister({

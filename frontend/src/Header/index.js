@@ -44,7 +44,17 @@ const StyledA = styled.a `
     color: #171212;
 `;
 
-const Header = () => (
+const Header = ({isAthenticated}) => (
+    <>
+    {isAthenticated ? (
+    <StyledNavBar>
+        <StyledList>
+            <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
+            <StyledLi><Link to="accounts/register">Account</Link></StyledLi>
+            <StyledLi>Logout</StyledLi>
+        </StyledList>
+    </StyledNavBar>
+    ) : (
     <StyledNavBar>
         <StyledList>
             <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
@@ -52,6 +62,9 @@ const Header = () => (
             <StyledLi>Login</StyledLi>
         </StyledList>
     </StyledNavBar>
+    )}
+
+    </>
 )
 
 export default Header;
