@@ -193,8 +193,20 @@ const Register = () => {
             type: 'REGISTER_POST_FAILURE',
             payload: e.response
           })
+          setTimeout(() => {
+            cleanForm();
+          }, 2000)
         });
       }, 3000)
+    }
+
+    const cleanForm = () => {
+      dispatchRegister({
+        type: 'REGISTER_POST_NULL'
+      })
+      setEmail('')
+      setPassword1('')
+      setPassword2('')
     }
 
     return (
