@@ -4,6 +4,7 @@ import axios from 'axios';
 import Loader from "react-loader-spinner";
 import checked from '../assets/images/checked.png';
 import failed from '../assets/images/close.png';
+import { useNavigate } from 'react-router';
 
 const StyledContainer = styled.div `
   position: relative;
@@ -148,6 +149,7 @@ const Register = ({getToken}) => {
     const [email, setEmail] = React.useState('');
     const [password1, setPassword1] = React.useState('');
     const [password2, setPassword2] = React.useState('');
+    const navigate = useNavigate();
     const [register, dispatchRegister] = React.useReducer(
       registerReducer,
       {data: null, isError: false, isLoading: false, isSuccess: false}
@@ -185,6 +187,9 @@ const Register = ({getToken}) => {
             payload: res.data
           });
           getToken(res.data.key);
+          setTimeout(() => {
+            navigate('/')
+          }, 2000)
         })
         .catch(e => {
           dispatchRegister({
