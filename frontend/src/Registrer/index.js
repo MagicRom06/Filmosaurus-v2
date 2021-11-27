@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Loader from "react-loader-spinner";
+import checked from '../assets/images/checked.png';
+import failed from '../assets/images/close.png';
 
 const StyledContainer = styled.div `
   position: relative;
@@ -107,6 +109,13 @@ const endpoint = 'http://127.0.0.1:8000/api/v1/dj-rest-auth/registration/'
 
 const registerReducer = (state, action) => {
   switch (action.type) {
+    case 'REGISTER_POST_NULL':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccess: false
+      }
     case 'REGISTER_POST_INIT':
       return {
         ...state,
@@ -231,12 +240,22 @@ const Register = () => {
               <Loader
                 type="TailSpin"
                 color="white"
-                height={60}
-                width={60}
+                height={70}
+                width={70}
                 visible={true}
               />
             </StyledLoader> 
         </Modal>
+        )}
+        {register.isSuccess && (
+          <Modal>
+            <img src={checked} width={70} height={70} />
+          </Modal>
+        )}
+        {register.isError && (
+          <Modal>
+            <img src={failed} width={70} height={70} />
+          </Modal>
         )}
       </StyledContainer>
     )
