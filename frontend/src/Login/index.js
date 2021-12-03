@@ -2,11 +2,37 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import Loader from "react-loader-spinner";
+import checked from '../assets/images/checked.png';
+import failed from '../assets/images/close.png';
 
 const StyledContainer = styled.div `
-    margin: auto;
-    width: 50%;
-    text-align: center;
+position: relative;
+`;
+
+const StyledLoader = styled.div `
+  text-align:center;
+`;
+
+const StyledModal = styled.div `
+  background-color: transparent;
+  z-index: 9;
+  margin: 20px;
+  height: 520px;
+  text-align: center;
+
+  span {
+    margin: 0;
+    width: 10%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    background-color: #171212;
+    opacity: 0.3;
+    padding: 10px;
+  }
 `;
 
 const StyledHeadlinePrimary = styled.h1 `
@@ -48,6 +74,21 @@ const StyledInput = styled.input `
 const StyledFormRow = styled.div `
     display: flex;
     padding: 20px;
+`;
+
+const StyledMainDiv = styled.div `
+    margin: auto;
+    width: 50%;
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 25%;
+
+    @media only screen and (max-width: 992px) {
+      width: 100%;
+      left: 0;
+    }
 `;
 
 const StyledButton = styled.button `
@@ -123,6 +164,18 @@ const Login = ({getToken}) => {
         e.preventDefault();
     }
 
+    const cleanForm = () => {
+        dispatchLogin({
+          type: 'LOGIN_POST_NULL'
+        })
+        setEmail('')
+        setPassword('')
+      }
+  
+      const handleErrorModalClick = () => {
+        cleanForm();
+      }
+
     const handlePostLogin = data => {
         dispatchLogin({type: 'LOGIN_POST_INIT'})
         setTimeout(() => {
@@ -139,7 +192,7 @@ const Login = ({getToken}) => {
                 })
                 .catch(e => {
                     dispatchLogin({
-                        type: 'REGISTER_POST_FAILURE',
+                        type: 'LOGIN_POST_FAILURE',
                         payload: e.response
                     })
                 })
@@ -148,34 +201,72 @@ const Login = ({getToken}) => {
 
     return (
         <StyledContainer>
-            <StyledHeadlinePrimary>login</StyledHeadlinePrimary>
-                <StyledForm onSubmit={handleSubmit}>
-                    <StyledFormRow>
-                        <StyledLabel>Email : </StyledLabel>
-                        <StyledInput
-                            width='75%'
-                            type="text"
-                            name="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
+            <StyledMainDiv>
+                <StyledHeadlinePrimary>login</StyledHeadlinePrimary>
+                    <StyledForm onSubmit={handleSubmit}>
+                        <StyledFormRow>
+                            <StyledLabel>Email : </StyledLabel>
+                            <StyledInput
+                                width='75%'
+                                type="text"
+                                name="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                        </StyledFormRow>
+                        <StyledFormRow>
+                            <StyledLabel>Password : </StyledLabel>
+                            <StyledInput
+                                width='69%'
+                                type="text"
+                                name="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                        </StyledFormRow>
+                        <StyledFormRow>
+                        <StyledButton type="submit">Login</StyledButton>
+                        </StyledFormRow>
+                    </StyledForm>
+                </StyledMainDiv>
+                {login.isLoading && (
+                    <Modal>
+                        <StyledLoader>
+                        <Loader
+                            type="TailSpin"
+                            color="white"
+                            height={70}
+                            width={70}
+                            visible={true}
                         />
-                    </StyledFormRow>
-                    <StyledFormRow>
-                        <StyledLabel>Password : </StyledLabel>
-                        <StyledInput
-                            width='69%'
-                            type="text"
-                            name="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        />
-                    </StyledFormRow>
-                    <StyledFormRow>
-                    <StyledButton type="submit">Login</StyledButton>
-                    </StyledFormRow>
-                </StyledForm>
+                        </StyledLoader> 
+                    </Modal>
+                )}
+                {login.isSuccess && (
+                    <Modal>
+                        <img src={checked} width={70} height={70} />
+                    </Modal>
+                )}
+                {login.isError && (
+                    <Modal>
+                        <img onClick={handleErrorModalClick} src={failed} width={70} height={70} />
+                    </Modal>
+                )}
         </StyledContainer>
     )
 }
+
+const Modal = ({children}) => {
+
+    return (
+      <>
+      <StyledModal>
+        <span>
+        {children}
+        </span>
+      </StyledModal>
+      </>
+    )
+  }
 
 export default Login;
