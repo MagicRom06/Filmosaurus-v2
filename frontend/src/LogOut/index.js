@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router';
 
 const StyledContainer = styled.div `
     width: 50%;
@@ -39,14 +40,26 @@ const StyledButton = styled.button `
     }
 `;
 
-const LogOut = () => {
+const LogOut = ({setLoggedOut}) => {
+
+    const navigate = useNavigate();
+
+    const handleClickConfirm = () => {
+        setLoggedOut(true);
+        navigate('/');
+    }
+
+    const handleClickCancel = () => {
+        navigate('/');
+    }
+
     return (
         <StyledContainer>
             <StyledHeadlinePrimary>Logout</StyledHeadlinePrimary>
             <StyledHeadlineSecondary>Are you sure you want to logout ?</StyledHeadlineSecondary>
             <StyledDivButton>
-                <StyledButton>Confirm</StyledButton>
-                <StyledButton>Cancel</StyledButton>
+                <StyledButton onClick={handleClickConfirm}>Confirm</StyledButton>
+                <StyledButton onClick={handleClickCancel}>Cancel</StyledButton>
             </StyledDivButton>
         </StyledContainer>
     )
