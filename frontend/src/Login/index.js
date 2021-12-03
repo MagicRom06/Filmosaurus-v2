@@ -1,4 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const StyledContainer = styled.div `
     margin: auto;
@@ -62,22 +65,113 @@ const StyledButton = styled.button `
     stroke: #ffffff;
   }
 `;
+const endpoint = 'http://127.0.0.1:8000/api/v1/dj-rest-auth/login/'
+
+const loginReducer = (state, action) => {
+  switch (action.type) {
+    case 'LOGIN_POST_NULL':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccess: false
+      }
+    case 'LOGIN_POST_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        isSuccess: false
+      };
+    case 'LOGIN_POST_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload.key,
+        isSuccess: true
+      };
+    case 'LOGIN_POST_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        isSuccess: false
+      };
+    default:
+      return state
+  }
+}
 
 const Login = ({getToken}) => {
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const navigate = useNavigate();
+    const [login, dispatchLogin] = React.useReducer(
+        loginReducer,
+        {data: null, isError: false, isLoading: false, isSuccess: false}
+      )
+
+    const handleSubmit = e => {
+        const data = {
+            'email': e.target.email.value,
+            'password': e.target.password.value
+        }
+        console.log(data)
+        handlePostLogin(data)
+        e.preventDefault();
+    }
+
+    const handlePostLogin = data => {
+        dispatchLogin({type: 'LOGIN_POST_INIT'})
+        setTimeout(() => {
+            axios.post(endpoint, data)
+                .then(res => {
+                    dispatchLogin({
+                        type: 'LOGIN_POST_SUCCESS',
+                        payload: res.data
+                    });
+                    getToken(res.data.key);
+                    setTimeout(() => {
+                        navigate('/')
+                    }, 2000)
+                })
+                .catch(e => {
+                    dispatchLogin({
+                        type: 'REGISTER_POST_FAILURE',
+                        payload: e.response
+                    })
+                })
+        }, 3000)
+    }
+
     return (
         <StyledContainer>
             <StyledHeadlinePrimary>login</StyledHeadlinePrimary>
-                <StyledForm>
+                <StyledForm onSubmit={handleSubmit}>
                     <StyledFormRow>
                         <StyledLabel>Email : </StyledLabel>
-                        <StyledInput width='75%' type="text" name="email"/>
+                        <StyledInput
+                            width='75%'
+                            type="text"
+                            name="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                        />
                     </StyledFormRow>
                     <StyledFormRow>
                         <StyledLabel>Password : </StyledLabel>
-                        <StyledInput width='69%' type="text" name="password"/>
+                        <StyledInput
+                            width='69%'
+                            type="text"
+                            name="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                        />
                     </StyledFormRow>
                     <StyledFormRow>
-                    <StyledButton type="button">Login</StyledButton>
+                    <StyledButton type="submit">Login</StyledButton>
                     </StyledFormRow>
                 </StyledForm>
         </StyledContainer>
