@@ -13,8 +13,11 @@ const App = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['auth-token']);
   const [loggedOut, setLoggedOut] = React.useState(false)
 
-  token && setCookie('auth-token', token, {path: '/', maxAge: 86400})
-  loggedOut && removeCookie('auth-token', {path : '/'})
+  const handleLogin = () => {
+    setCookie('auth-token', token, {path: '/', maxAge: 86400})
+  }
+
+  token !== null && handleLogin()
 
   return (
     <>
@@ -23,7 +26,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="movies/:movieId" element={<MovieDetails />} />
       <Route path="accounts/register" element={<Register getToken={setToken} />} />
-      <Route path="accounts/logout" element={<LogOut setLoggedOut={setLoggedOut} />} />
+      <Route path="accounts/logout" element={<LogOut removeCookie={removeCookie} setToken={setToken} />} />
     </Routes>
     </>
   )

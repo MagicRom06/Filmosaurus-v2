@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
+import Loader from "react-loader-spinner";
+import React from 'react';
 
 const StyledContainer = styled.div `
     width: 50%;
@@ -40,13 +42,23 @@ const StyledButton = styled.button `
     }
 `;
 
-const LogOut = ({setLoggedOut}) => {
+const StyledLoader = styled.div `
+  text-align:center;
+`;
 
+const LogOut = ({removeCookie, setToken}) => {
+
+    const [loading, setLoading] = React.useState(false);
     const navigate = useNavigate();
 
     const handleClickConfirm = () => {
-        setLoggedOut(true);
-        navigate('/');
+        setLoading(true)
+        setTimeout(() => {
+            setToken(null)
+            removeCookie('auth-token', {path: '/'})
+            setLoading(false)
+            navigate('/')
+        }, 2000)
     }
 
     const handleClickCancel = () => {
@@ -58,7 +70,20 @@ const LogOut = ({setLoggedOut}) => {
             <StyledHeadlinePrimary>Logout</StyledHeadlinePrimary>
             <StyledHeadlineSecondary>Are you sure you want to logout ?</StyledHeadlineSecondary>
             <StyledDivButton>
-                <StyledButton onClick={handleClickConfirm}>Confirm</StyledButton>
+                
+                {loading ? (
+                <StyledButton>
+                    <StyledLoader>
+                        <Loader
+                          type="TailSpin"
+                          color="white"
+                          height={30}
+                          width={30}
+                          visible={true}
+                        />
+                    </StyledLoader> 
+                </StyledButton>
+                ) : (<StyledButton onClick={handleClickConfirm}>Confirm</StyledButton>)}
                 <StyledButton onClick={handleClickCancel}>Cancel</StyledButton>
             </StyledDivButton>
         </StyledContainer>
