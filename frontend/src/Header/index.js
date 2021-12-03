@@ -50,7 +50,7 @@ const Header = ({isAthenticated}) => (
     <StyledNavBar>
         <StyledList>
             <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
-            <StyledLi>Logout</StyledLi>
+            <StyledLi><Link to="accounts/logout">Logout</Link></StyledLi>
             <StyledLi><Link to="#">Account</Link></StyledLi>
         </StyledList>
     </StyledNavBar>
