@@ -225,7 +225,7 @@ const Login = ({getToken}) => {
                             />
                         </StyledFormRow>
                         <StyledFormRow>
-                        <StyledButton type="submit">Login</StyledButton>
+                        <StyledButton disabled={!email || !password} type="submit">Login</StyledButton>
                         </StyledFormRow>
                     </StyledForm>
                 </StyledMainDiv>
