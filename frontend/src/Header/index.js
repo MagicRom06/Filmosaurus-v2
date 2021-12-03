@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 
@@ -43,14 +44,27 @@ const StyledA = styled.a `
     color: #171212;
 `;
 
-const Header = () => (
+const Header = ({isAthenticated}) => (
+    <>
+    {isAthenticated ? (
     <StyledNavBar>
         <StyledList>
             <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
-            <StyledLi>Sign up</StyledLi>
+            <StyledLi>Logout</StyledLi>
+            <StyledLi><Link to="#">Account</Link></StyledLi>
+        </StyledList>
+    </StyledNavBar>
+    ) : (
+    <StyledNavBar>
+        <StyledList>
+            <StyledA href="/"><StyledHeadlinePrimary>Filmosaurus</StyledHeadlinePrimary></StyledA>
+            <StyledLi><Link to="accounts/register">Sign up</Link></StyledLi>
             <StyledLi>Login</StyledLi>
         </StyledList>
     </StyledNavBar>
+    )}
+
+    </>
 )
 
 export default Header;
