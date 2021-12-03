@@ -218,7 +218,7 @@ const Login = ({getToken}) => {
                             <StyledLabel>Password : </StyledLabel>
                             <StyledInput
                                 width='69%'
-                                type="text"
+                                type="password"
                                 name="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
