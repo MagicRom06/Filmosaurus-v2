@@ -3,6 +3,7 @@ import Home from "./Home";
 import MovieDetails from "./MovieDetails";
 import Header from "./Header";
 import Register from "./Registrer";
+import LogOut from "./LogOut";
 import React from "react";
 import { useCookies } from 'react-cookie';
 
@@ -20,6 +21,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="movies/:movieId" element={<MovieDetails />} />
       <Route path="accounts/register" element={<Register getToken={setToken} />} />
+      <Route path="accounts/logout" element={<LogOut />} />
     </Routes>
     </>
   )
