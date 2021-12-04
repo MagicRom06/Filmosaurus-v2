@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # local
     'users',
     'movies',
+    'accounts',
 
     # third party
     'rest_framework',
