@@ -98,7 +98,6 @@ const moviesReducer = (state, action) => {
 const Home = () => {
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const [, spinnerLoading] = React.useState(true);
     const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)])
     const [actualSearch, setActualSearch] = React.useState(undefined)
 
@@ -175,7 +174,7 @@ const Home = () => {
               color="#171212"
               height={60}
               width={60}
-              visible={spinnerLoading}
+              visible={true}
             />
           </StyledLoader> ) 
       : ( 

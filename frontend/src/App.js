@@ -25,12 +25,12 @@ const App = () => {
     {cookies["auth-token"] ? (<Header isAthenticated={true}/>) : <Header isAthenticated={false}/>}
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="movies/:movieId" element={<MovieDetails />} />
+      <Route path="movies/:movieId" element={<MovieDetails token={cookies["auth-token"]} />} />
       <Route path="accounts/register" element={<Register getToken={setToken} />} />
       <Route path="accounts/login" element={<Login getToken={setToken} />} />
       <Route path="accounts/logout" element={<LogOut removeCookie={removeCookie} setToken={setToken} />} />
       {cookies['auth-token'] && (
-        <Route path="account" element={<Account />} />
+        <Route path="account" element={<Account token={cookies["auth-token"]} />} />
       )}
     </Routes>
     </>
