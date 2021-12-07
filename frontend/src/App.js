@@ -5,6 +5,7 @@ import Header from "./Header";
 import Register from "./Registrer";
 import LogOut from "./LogOut";
 import Login from "./Login";
+import Account from "./Account";
 import React from "react";
 import { useCookies } from 'react-cookie';
 
@@ -28,6 +29,9 @@ const App = () => {
       <Route path="accounts/register" element={<Register getToken={setToken} />} />
       <Route path="accounts/login" element={<Login getToken={setToken} />} />
       <Route path="accounts/logout" element={<LogOut removeCookie={removeCookie} setToken={setToken} />} />
+      {cookies['auth-token'] && (
+        <Route path="account" element={<Account />} />
+      )}
     </Routes>
     </>
   )
