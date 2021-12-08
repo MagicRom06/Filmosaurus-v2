@@ -334,11 +334,11 @@ const Detail = ({movie, token}) => {
     }
 
     const handleCheckWatchlist = React.useCallback(() => {
-        movie.id != undefined && (
+        movie.id !== undefined & token !== undefined &&  (
             axios
                 .get(endpoint_check, {headers: headers})
                 .then(res => {
-                    console.log(res);
+                    res.data.saved ? setSaved(true) : setSaved(false)
                 })
         )
     }, [])
@@ -364,7 +364,7 @@ const Detail = ({movie, token}) => {
                 {token ? (
                     <>
                     {add.isLoading ? (
-                        <StyledLoader>
+                        <StyledLoader style={{marginTop:"10px"}}>
                             <Loader
                                 type="TailSpin"
                                 color="#171212"
@@ -375,7 +375,7 @@ const Detail = ({movie, token}) => {
                         </StyledLoader>
                     ) : (
                         <>
-                        {add.data.success ? (
+                        {add.data.success || saved ? (
                             <StyledSpan color={"green"}>The movie has been added in your watchlist</StyledSpan>
                         ) : (
                             <StyledButton onClick={handleClick}>Save</StyledButton>

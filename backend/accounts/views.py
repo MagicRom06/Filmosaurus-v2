@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from .serializers import WatchlistAddSerializer, WatchlistCheckinDbSerializer
+from .serializers import WatchlistAddSerializer, WatchlistCheckinDbSerializer, WatchlistListSerializer
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -47,3 +47,11 @@ class MovieInWatchlist(generics.ListCreateAPIView):
             return Response({'saved': True})
         else:
             return Response({'saved': False}) 
+
+
+class WatchlistListView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = WatchlistListSerializer
+
+    def get_queryset(self):
+        return Watchlist.objects.filter(user_id=self.request.user.id)
