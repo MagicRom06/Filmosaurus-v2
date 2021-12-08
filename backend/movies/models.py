@@ -53,24 +53,3 @@ class Movie(models.Model):
 
     def get_absolute_url(self):
         return reverse('movie_detail', args=[str(self.id)])
-
-
-class Watchlist(models.Model):
-    """
-    used for watchlist users
-    """
-    user = models.ForeignKey(
-        get_user_model(),
-        on_delete=CASCADE,
-        related_name='user',
-        default=None
-    )
-    movie = models.ForeignKey(
-        Movie,
-        on_delete=CASCADE,
-        related_name='movie',
-        default=None
-    )
-    seen = models.BooleanField(default=False)
-    viewed_date = models.DateTimeField(null=True, blank=True)
-    saved_date = models.DateTimeField(default=None)

@@ -12,10 +12,25 @@ class AddToWatchlistView(APIView):
 
     def post(self, request):
         serializer = WatchlistAddSerializer(data=request.data)
-        movie = Movie.objects.get(id=request.data['movie_id'])
         user = get_user_model().objects.get(id=self.request.user.id)
         if serializer.is_valid():
-            add = Watchlist.objects.create(movie=movie, user=user)
-            add.save()
-            return Response(movie.id, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                movie = Movie.objects.get(id=request.data['movie_id'])
+                add = Watchlist.objects.create(movie=movie, user=user)
+                add.save()
+            except Exception as e:
+                print(e)
+                return Response(
+                    {
+                        "success": False,
+                        "error": str(e)
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            else:
+                return Response(
+                    {
+                        "movie": movie.title, "success": True
+                    },
+                    status=status.HTTP_201_CREATED
+                )
