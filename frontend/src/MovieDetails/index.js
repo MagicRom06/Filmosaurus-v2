@@ -141,7 +141,8 @@ const StyledSpan = styled.span `
   font-size: 20px;
   margin-top: 20px;
   padding: 5px;
-  color: grey;
+
+  color: ${props => props.color};
 `;
 
 const movieDetailReducer = (state, action) => {
@@ -174,7 +175,6 @@ const MovieDetails = ({token}) => {
 
     let params = useParams();
     const url = `http://127.0.0.1:8000/api/v1/movie/${params.movieId}`
-    const [spinnerLoading] = React.useState(true);
     const [movie, dispatchMovie] = React.useReducer(
         movieDetailReducer,
         {data: [], isLoading: false, isError: false}
@@ -244,7 +244,7 @@ const MovieDetails = ({token}) => {
                         color="#171212"
                         height={60}
                         width={60}
-                        visible={spinnerLoading}
+                        visible={true}
                         />
                     </StyledLoader> ) 
                 : (
@@ -257,7 +257,7 @@ const MovieDetails = ({token}) => {
                                 color="#171212"
                                 height={60}
                                 width={60}
-                                visible={spinnerLoading}
+                                visible={true}
                                 />
                             </StyledLoader>
                         ) : (
@@ -283,7 +283,7 @@ const MovieDetails = ({token}) => {
                     color="#171212"
                     height={60}
                     width={60}
-                    visible={spinnerLoading}
+                    visible={true}
                     />
                 </StyledLoader>)
                 : ( 
@@ -301,6 +301,11 @@ const Detail = ({movie, token}) => {
 
     const endpoint = "http://127.0.0.1:8000/api/v1/accounts/watchlist/add"
 
+    const [add, dispatchAdd] = React.useReducer(
+        movieDetailReducer,
+        {data: [], isLoading: false, isError: false}
+    );
+
     const handleClick = () => {
         const headers = {
             'Content-Type': 'application/json',
@@ -309,13 +314,22 @@ const Detail = ({movie, token}) => {
         const data = {
             "movie_id": movie.id
         }
-        axios
+        dispatchAdd({type: 'MOVIE_FETCH_INIT'})
+        setTimeout(() => {
+            axios
             .post(endpoint, data, {headers: headers})
             .then(res => {
-                console.log(res);
+                dispatchAdd({
+                    type: 'MOVIE_FETCH_SUCCESS',
+                    payload: res.data
+                })
             })
+            .catch(() => {
+                dispatchAdd({type: 'MOVIE_FETCH_FAILURE'})
+            })
+        }, 2000)
     }
-
+    console.log(add.data)
     return (
         <>
             {movie.length !== 0 && 
@@ -331,9 +345,32 @@ const Detail = ({movie, token}) => {
                 <StyledTitleRow>Plot</StyledTitleRow>
                 <StyledDetailItem>{movie.plot}</StyledDetailItem>
                 {token ? (
-                    <StyledButton onClick={handleClick}>Save</StyledButton>
+                    <>
+                    {add.isLoading ? (
+                        <StyledLoader>
+                            <Loader
+                                type="TailSpin"
+                                color="#171212"
+                                height={60}
+                                width={60}
+                                visible={true}
+                            />
+                        </StyledLoader>
+                    ) : (
+                        <>
+                        {add.data.success ? (
+                            <StyledSpan color={"green"}>The movie has been added in your watchlist</StyledSpan>
+                        ) : (
+                            <StyledButton onClick={handleClick}>Save</StyledButton>
+                        )}
+                        {add.isError && (
+                            <StyledSpan color={"#CD5039"}>Something went wrong, please retry later</StyledSpan>
+                        )}
+                        </>
+                    )}
+                    </>
                 ) : (
-                    <StyledSpan>You have to be logged to save a movie</StyledSpan>
+                    <StyledSpan color={"grey"}>You have to be logged to save a movie</StyledSpan>
                 )}
             </>
             }
