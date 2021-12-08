@@ -1,6 +1,6 @@
 from rest_framework.response import Response
-from .serializers import WatchlistAddSerializer
-from rest_framework import status
+from .serializers import WatchlistAddSerializer, WatchlistCheckinDbSerializer
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
@@ -34,3 +34,16 @@ class AddToWatchlistView(APIView):
                     status=status.HTTP_201_CREATED
                 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MovieInWatchlist(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = WatchlistCheckinDbSerializer
+
+    def get(self, request):
+        user = get_user_model().objects.get(id=self.request.user.id)
+        movie_id = self.request.query_params.get('movie_id')
+        if Watchlist.objects.filter(user_id=user.id, movie_id=movie_id).exists():
+            return Response({'saved': True})
+        else:
+            return Response({'saved': False}) 

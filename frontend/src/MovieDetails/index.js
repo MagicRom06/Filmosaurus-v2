@@ -299,25 +299,28 @@ const MovieDetails = ({token}) => {
 
 const Detail = ({movie, token}) => {
 
-    const endpoint = "http://127.0.0.1:8000/api/v1/accounts/watchlist/add"
+    const endpoint_add = "http://127.0.0.1:8000/api/v1/accounts/watchlist/add";
+    const endpoint_check = `http://127.0.0.1:8000/api/v1/accounts/watchlist/movie/check?movie_id=${movie.id}`
 
+    const [saved, setSaved] = React.useState(false);
     const [add, dispatchAdd] = React.useReducer(
         movieDetailReducer,
         {data: [], isLoading: false, isError: false}
     );
 
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+    }
+
     const handleClick = () => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`
-        }
         const data = {
             "movie_id": movie.id
         }
         dispatchAdd({type: 'MOVIE_FETCH_INIT'})
         setTimeout(() => {
             axios
-            .post(endpoint, data, {headers: headers})
+            .post(endpoint_add, data, {headers: headers})
             .then(res => {
                 dispatchAdd({
                     type: 'MOVIE_FETCH_SUCCESS',
@@ -329,7 +332,21 @@ const Detail = ({movie, token}) => {
             })
         }, 2000)
     }
-    console.log(add.data)
+
+    const handleCheckWatchlist = React.useCallback(() => {
+        movie.id != undefined && (
+            axios
+                .get(endpoint_check, {headers: headers})
+                .then(res => {
+                    console.log(res);
+                })
+        )
+    }, [])
+
+    React.useEffect(() => {
+        handleCheckWatchlist()
+    }, [handleCheckWatchlist])
+
     return (
         <>
             {movie.length !== 0 && 
