@@ -298,16 +298,22 @@ const MovieDetails = ({token}) => {
 }
 
 const Detail = ({movie, token}) => {
-    
+
+    const endpoint = "http://127.0.0.1:8000/api/v1/accounts/watchlist/add"
+
     const handleClick = () => {
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': token
-          }
-        const data = {
-            movie: movie.id
+            'Authorization': `Token ${token}`
         }
-        console.log(data);
+        const data = {
+            "movie_id": movie.id
+        }
+        axios
+            .post(endpoint, data, {headers: headers})
+            .then(res => {
+                console.log(res);
+            })
     }
 
     return (
