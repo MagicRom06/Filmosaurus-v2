@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledContainer = styled.div `
@@ -37,6 +38,35 @@ const StyledBlockDiv = styled.div `
     flex-direction: column;
 `;
 
+const StyledColumDiv = styled.div `
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+`;
+
+const StyledItemRow = styled.div `
+    margin: 5px;
+    padding: 10px;
+    margin-right: 0;
+    margin-left: 0;
+    font-size: 20px;
+
+    a {
+        color: #171212;
+        text-decoration: none;
+        display: block;
+    }
+
+    &:hover {
+        background-color: #171212;
+        transition: 0.1s;
+    }
+
+    &:hover a{
+        color: white;
+    }
+`;
+
 const Account = ({token}) => {
     const [watchList, setWatchList] = React.useState([])
     const endpoint = 'http://127.0.0.1:8000/api/v1/accounts/watchlist/list';
@@ -64,7 +94,13 @@ const Account = ({token}) => {
             <StyledRowDiv>
                 <StyledBlockDiv>
                     <StyledHeadlineSecondary>Watchlist</StyledHeadlineSecondary>
-                    <div>2</div>
+                    <StyledColumDiv>
+                        {watchList.map(item => {
+                            return (
+                                <Item item={item} />
+                            )
+                        })}
+                    </StyledColumDiv>
                 </StyledBlockDiv>
                 <StyledBlockDiv>
                     <StyledHeadlineSecondary>Historic</StyledHeadlineSecondary>
@@ -75,6 +111,12 @@ const Account = ({token}) => {
             </StyledRowDiv>
         </StyledContainer>
         </>
+    )
+}
+
+const Item = ({item}) => {
+    return (
+        <StyledItemRow><Link to={`/movies/${item.movie_id}`}>{item.title} ({item.year})</Link></StyledItemRow>
     )
 }
 
