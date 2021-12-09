@@ -119,6 +119,32 @@ const StyledHr = styled.hr `
     opacity: 0.2;
 `;
 
+const StyledButton = styled.button `
+  background: transparent;
+  border: 1px solid #171212;
+  width: 100%;
+  margin-top: 20px;
+  padding: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+  &:hover {
+    background: #171212;
+    color: #ffffff;
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+`;
+
+const StyledSpan = styled.span `
+  text-align: center;
+  font-size: 20px;
+  margin-top: 20px;
+  padding: 5px;
+
+  color: ${props => props.color};
+`;
+
 const movieDetailReducer = (state, action) => {
     switch (action.type) {
         case 'MOVIE_FETCH_INIT':
@@ -145,11 +171,10 @@ const movieDetailReducer = (state, action) => {
     }
 }
 
-const MovieDetails = () => {
+const MovieDetails = ({token}) => {
 
     let params = useParams();
     const url = `http://127.0.0.1:8000/api/v1/movie/${params.movieId}`
-    const [spinnerLoading] = React.useState(true);
     const [movie, dispatchMovie] = React.useReducer(
         movieDetailReducer,
         {data: [], isLoading: false, isError: false}
@@ -157,7 +182,7 @@ const MovieDetails = () => {
     const [image, setImage] = React.useState(undefined)
     const [rates, setRates] = React.useState(undefined)
 
-    const handleFetchMovie = async () => {
+    const handleFetchMovie = React.useCallback(() => {
         dispatchMovie({type: 'MOVIE_FETCH_INIT'})
         axios
             .get(url)
@@ -170,7 +195,7 @@ const MovieDetails = () => {
             .catch(() => {
                 dispatchMovie({type: 'MOVIE_FETCH_FAILURE'})
             })
-    }
+    }, [movie])
 
     const handleFetchImage = (title, year) => {
         movie.data.length !== 0  &&
@@ -219,7 +244,7 @@ const MovieDetails = () => {
                         color="#171212"
                         height={60}
                         width={60}
-                        visible={spinnerLoading}
+                        visible={true}
                         />
                     </StyledLoader> ) 
                 : (
@@ -232,7 +257,7 @@ const MovieDetails = () => {
                                 color="#171212"
                                 height={60}
                                 width={60}
-                                visible={spinnerLoading}
+                                visible={true}
                                 />
                             </StyledLoader>
                         ) : (
@@ -244,7 +269,7 @@ const MovieDetails = () => {
                         )}
                         </>
                         <StyledDetailCol>
-                            <Detail movie={movie.data} />
+                            <Detail movie={movie.data} token={token} />
                         </StyledDetailCol>
                     </>
                 )
@@ -258,7 +283,7 @@ const MovieDetails = () => {
                     color="#171212"
                     height={60}
                     width={60}
-                    visible={spinnerLoading}
+                    visible={true}
                     />
                 </StyledLoader>)
                 : ( 
@@ -272,7 +297,56 @@ const MovieDetails = () => {
     )
 }
 
-const Detail = ({movie}) => {
+const Detail = ({movie, token}) => {
+
+    const endpoint_add = "http://127.0.0.1:8000/api/v1/accounts/watchlist/add";
+    const endpoint_check = `http://127.0.0.1:8000/api/v1/accounts/watchlist/movie/check?movie_id=${movie.id}`
+
+    const [saved, setSaved] = React.useState(false);
+    const [add, dispatchAdd] = React.useReducer(
+        movieDetailReducer,
+        {data: [], isLoading: false, isError: false}
+    );
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
+    }
+
+    const handleClick = () => {
+        const data = {
+            "movie_id": movie.id
+        }
+        dispatchAdd({type: 'MOVIE_FETCH_INIT'})
+        setTimeout(() => {
+            axios
+            .post(endpoint_add, data, {headers: headers})
+            .then(res => {
+                dispatchAdd({
+                    type: 'MOVIE_FETCH_SUCCESS',
+                    payload: res.data
+                })
+            })
+            .catch(() => {
+                dispatchAdd({type: 'MOVIE_FETCH_FAILURE'})
+            })
+        }, 2000)
+    }
+
+    const handleCheckWatchlist = React.useCallback(() => {
+        movie.id !== undefined & token !== undefined &&  (
+            axios
+                .get(endpoint_check, {headers: headers})
+                .then(res => {
+                    res.data.saved ? setSaved(true) : setSaved(false)
+                })
+        )
+    }, [])
+
+    React.useEffect(() => {
+        handleCheckWatchlist()
+    }, [handleCheckWatchlist])
+
     return (
         <>
             {movie.length !== 0 && 
@@ -287,6 +361,34 @@ const Detail = ({movie}) => {
                 <StyledDetailItem>{movie.countries.map((item, i) => <span key={i}>{item + " "}</span>)}</StyledDetailItem>
                 <StyledTitleRow>Plot</StyledTitleRow>
                 <StyledDetailItem>{movie.plot}</StyledDetailItem>
+                {token ? (
+                    <>
+                    {add.isLoading ? (
+                        <StyledLoader style={{marginTop:"10px"}}>
+                            <Loader
+                                type="TailSpin"
+                                color="#171212"
+                                height={60}
+                                width={60}
+                                visible={true}
+                            />
+                        </StyledLoader>
+                    ) : (
+                        <>
+                        {add.data.success || saved ? (
+                            <StyledSpan color={"green"}>The movie has been added in your watchlist</StyledSpan>
+                        ) : (
+                            <StyledButton onClick={handleClick}>Save</StyledButton>
+                        )}
+                        {add.isError && (
+                            <StyledSpan color={"#CD5039"}>Something went wrong, please retry later</StyledSpan>
+                        )}
+                        </>
+                    )}
+                    </>
+                ) : (
+                    <StyledSpan color={"grey"}>You have to be logged to save a movie</StyledSpan>
+                )}
             </>
             }
         </>
@@ -294,7 +396,6 @@ const Detail = ({movie}) => {
 }
 
 const Rates = ({ratings}) => {
-    console.log(ratings)
     return (
         <StyledRateMainDiv>
             <StyledRateBlock>

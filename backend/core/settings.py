@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # local
     'users',
     'movies',
+    'accounts',
 
     # third party
     'rest_framework',
@@ -160,8 +161,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
