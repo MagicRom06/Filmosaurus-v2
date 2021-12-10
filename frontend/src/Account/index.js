@@ -27,6 +27,10 @@ const StyledHeadlineSecondary = styled.h1 `
 const StyledRowDiv = styled.div `
     display: flex;
     justify-content: center;
+
+    @media only screen and (max-width: 992px) {
+        flex-direction: column;
+    }
 `;
 
 const StyledBlockDiv = styled.div `
@@ -35,6 +39,10 @@ const StyledBlockDiv = styled.div `
     margin: 10px;
     display: flex;
     flex-direction: column;
+
+    @media only screen and (max-width: 992px) {
+        width: 80%;
+    }
 `;
 
 const StyledColumDiv = styled.div `
@@ -44,7 +52,7 @@ const StyledColumDiv = styled.div `
 `;
 
 const StyledItemRow = styled.div `
-    width: 80%;
+    width: 100%;
     display:flex;
     margin: 5px;
     padding: 10px;

@@ -58,7 +58,7 @@ class WatchlistListView(generics.ListCreateAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return Watchlist.objects.filter(user_id=self.request.user.id)
+        return Watchlist.objects.filter(user_id=self.request.user.id).order_by('-id')
 
 
 class WatchlistUpdateSeenView(APIView):
