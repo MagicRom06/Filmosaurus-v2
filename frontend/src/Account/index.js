@@ -45,6 +45,8 @@ const StyledColumDiv = styled.div `
 `;
 
 const StyledItemRow = styled.div `
+    width: 80%;
+    display:flex;
     margin: 5px;
     padding: 10px;
     margin-right: 0;
@@ -65,6 +67,30 @@ const StyledItemRow = styled.div `
     &:hover a{
         color: white;
     }
+`;
+
+const ButtonRowDiv = styled.div `
+    display: flex;
+`;
+
+const StyledButton = styled.button `
+  background: transparent;
+  border: 1px solid #171212;
+  margin: 5px;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+  &:hover {
+    background: #171212;
+    color: #ffffff;
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+`;
+
+const StyledContainerItem = styled.div `
+  display: flex;
 `;
 
 const Account = ({token}) => {
@@ -116,7 +142,16 @@ const Account = ({token}) => {
 
 const Item = ({item}) => {
     return (
-        <StyledItemRow><Link to={`/movies/${item.movie_id}`}>{item.title} ({item.year})</Link></StyledItemRow>
+        <StyledContainerItem>
+        <StyledItemRow>
+            <Link to={`/movies/${item.movie_id}`}>
+                {item.title} ({item.year})
+            </Link>
+        </StyledItemRow>
+        <ButtonRowDiv>
+            <StyledButton>Viewed</StyledButton>
+        </ButtonRowDiv>
+        </StyledContainerItem>
     )
 }
 
