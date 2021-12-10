@@ -134,6 +134,18 @@ const Account = ({token}) => {
         <StyledContainer>
         <StyledHeadlinePrimary>Account</StyledHeadlinePrimary>
             <StyledRowDiv>
+            <StyledBlockDiv>
+                    <StyledHeadlineSecondary>Historic</StyledHeadlineSecondary>
+                    <StyledColumDiv>
+                        {watchList.map(item => {
+                            return (
+                                <div key={item.id}>
+                                {item.seen && <Item item={item} />}
+                                </div>
+                            )
+                        })}
+                    </StyledColumDiv>
+                </StyledBlockDiv>
                 <StyledBlockDiv>
                     <StyledHeadlineSecondary>Watchlist</StyledHeadlineSecondary>
                     <StyledColumDiv>
@@ -141,18 +153,6 @@ const Account = ({token}) => {
                             return (
                                 <div key={item.id}>
                                 {!item.seen && <Item item={item} handleClick={() => handleViewedClick(item.id)} />}
-                                </div>
-                            )
-                        })}
-                    </StyledColumDiv>
-                </StyledBlockDiv>
-                <StyledBlockDiv>
-                    <StyledHeadlineSecondary>Historic</StyledHeadlineSecondary>
-                    <StyledColumDiv>
-                        {watchList.map(item => {
-                            return (
-                                <div key={item.id}>
-                                {item.seen && <Item item={item} />}
                                 </div>
                             )
                         })}
