@@ -46,7 +46,7 @@ class MovieInWatchlist(generics.ListCreateAPIView):
     def get(self, request):
         user = get_user_model().objects.get(id=self.request.user.id)
         movie_id = self.request.query_params.get('movie_id')
-        if Watchlist.objects.filter(user_id=user.id, movie_id=movie_id).exists():
+        if Watchlist.objects.filter(user_id=user.id, movie_id=movie_id, seen=False).exists():
             return Response({'saved': True})
         else:
             return Response({'saved': False}) 

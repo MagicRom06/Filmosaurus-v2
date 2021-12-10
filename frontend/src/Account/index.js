@@ -121,7 +121,6 @@ const Account = ({token}) => {
         axios
             .put(endpoint_update, {watchlist_id: watchlist_id}, {headers: headers})
             .then(res => {
-                console.log(res);
                 handleLoadWatchlist()
             })
     }
