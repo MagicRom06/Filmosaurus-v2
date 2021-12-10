@@ -178,7 +178,6 @@ const Login = ({getToken}) => {
 
     const handlePostLogin = data => {
         dispatchLogin({type: 'LOGIN_POST_INIT'})
-        setTimeout(() => {
             axios.post(endpoint, data)
                 .then(res => {
                     dispatchLogin({
@@ -186,9 +185,7 @@ const Login = ({getToken}) => {
                         payload: res.data
                     });
                     getToken(res.data.key);
-                    setTimeout(() => {
-                        navigate('/')
-                    }, 2000)
+                    navigate('/')
                 })
                 .catch(e => {
                     dispatchLogin({
@@ -196,7 +193,6 @@ const Login = ({getToken}) => {
                         payload: e.response
                     })
                 })
-        }, 3000)
     }
 
     return (

@@ -53,12 +53,10 @@ const LogOut = ({removeCookie, setToken}) => {
 
     const handleClickConfirm = () => {
         setLoading(true)
-        setTimeout(() => {
             setToken(null)
             removeCookie('auth-token', {path: '/'})
             setLoading(false)
             navigate('/')
-        }, 2000)
     }
 
     const handleClickCancel = () => {

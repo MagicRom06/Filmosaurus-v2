@@ -179,7 +179,6 @@ const Register = ({getToken}) => {
 
     const handlePostRegister = data => {
       dispatchRegister({type: 'REGISTER_POST_INIT'})
-      setTimeout(() => {
         axios.post(endpoint, data)
         .then(res => {
           dispatchRegister({
@@ -187,9 +186,7 @@ const Register = ({getToken}) => {
             payload: res.data
           });
           getToken(res.data.key);
-          setTimeout(() => {
             navigate('/')
-          }, 2000)
         })
         .catch(e => {
           dispatchRegister({
@@ -197,7 +194,6 @@ const Register = ({getToken}) => {
             payload: e.response
           })
         });
-      }, 3000)
     }
 
     const cleanForm = () => {

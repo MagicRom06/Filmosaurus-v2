@@ -318,7 +318,6 @@ const Detail = ({movie, token}) => {
             "movie_id": movie.id
         }
         dispatchAdd({type: 'MOVIE_FETCH_INIT'})
-        setTimeout(() => {
             axios
             .post(endpoint_add, data, {headers: headers})
             .then(res => {
@@ -330,7 +329,6 @@ const Detail = ({movie, token}) => {
             .catch(() => {
                 dispatchAdd({type: 'MOVIE_FETCH_FAILURE'})
             })
-        }, 2000)
     }
 
     const handleCheckWatchlist = React.useCallback(() => {
