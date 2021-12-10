@@ -25,3 +25,9 @@ class WatchlistListSerializer(serializers.ModelSerializer):
             'saved_date'
         )
         model = Watchlist
+
+class WatchlistUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('seen', )
+        model = Watchlist

@@ -1,5 +1,8 @@
 from rest_framework.response import Response
-from .serializers import WatchlistAddSerializer, WatchlistCheckinDbSerializer, WatchlistListSerializer
+from .serializers import WatchlistAddSerializer, \
+                         WatchlistCheckinDbSerializer,\
+                         WatchlistListSerializer,\
+                         WatchlistUpdateSerializer
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -52,6 +55,25 @@ class MovieInWatchlist(generics.ListCreateAPIView):
 class WatchlistListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WatchlistListSerializer
+    pagination_class = None
 
     def get_queryset(self):
         return Watchlist.objects.filter(user_id=self.request.user.id)
+
+
+class WatchlistUpdateSeenView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        serializer = WatchlistUpdateSerializer(data=request.data)
+        user = get_user_model().objects.get(id=self.request.user.id)
+        if serializer.is_valid():
+            try:
+                item = Watchlist.objects.get(id=request.data['watchlist_id'], user_id=user.id)
+                item.seen = True
+                item.save()
+            except Exception as e:
+                return Response({'update': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'update': True}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

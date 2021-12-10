@@ -30,7 +30,6 @@ const StyledRowDiv = styled.div `
 `;
 
 const StyledBlockDiv = styled.div `
-    border: 1px solid #171212;
     width: 30%;
     padding: 5px;
     margin: 10px;
@@ -95,7 +94,8 @@ const StyledContainerItem = styled.div `
 
 const Account = ({token}) => {
     const [watchList, setWatchList] = React.useState([])
-    const endpoint = 'http://127.0.0.1:8000/api/v1/accounts/watchlist/list';
+    const endpoint_load = 'http://127.0.0.1:8000/api/v1/accounts/watchlist/list';
+    const endpoint_update = 'http://127.0.0.1:8000/api/v1/accounts/watchlist/update/seen/';
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Token ${token}`
@@ -103,11 +103,20 @@ const Account = ({token}) => {
 
     const handleLoadWatchlist = React.useCallback(() => {
         axios
-            .get(endpoint, {headers: headers})
+            .get(endpoint_load, {headers: headers})
             .then(res => {
-                setWatchList(res.data.results);
+                setWatchList(res.data);
             })
     }, [])
+
+    const handleViewedClick = watchlist_id => {
+        axios
+            .put(endpoint_update, {watchlist_id: watchlist_id}, {headers: headers})
+            .then(res => {
+                console.log(res);
+                handleLoadWatchlist()
+            })
+    }
 
     React.useEffect(() => {
         handleLoadWatchlist()
@@ -123,13 +132,24 @@ const Account = ({token}) => {
                     <StyledColumDiv>
                         {watchList.map(item => {
                             return (
-                                <Item item={item} />
+                                <div key={item.id}>
+                                {!item.seen && <Item item={item} handleClick={() => handleViewedClick(item.id)} />}
+                                </div>
                             )
                         })}
                     </StyledColumDiv>
                 </StyledBlockDiv>
                 <StyledBlockDiv>
                     <StyledHeadlineSecondary>Historic</StyledHeadlineSecondary>
+                    <StyledColumDiv>
+                        {watchList.map(item => {
+                            return (
+                                <div key={item.id}>
+                                {item.seen && <Item item={item} />}
+                                </div>
+                            )
+                        })}
+                    </StyledColumDiv>
                 </StyledBlockDiv>
                 <StyledBlockDiv>
                     <StyledHeadlineSecondary>Personal</StyledHeadlineSecondary>
@@ -140,7 +160,7 @@ const Account = ({token}) => {
     )
 }
 
-const Item = ({item}) => {
+const Item = ({item, handleClick}) => {
     return (
         <StyledContainerItem>
         <StyledItemRow>
@@ -148,9 +168,11 @@ const Item = ({item}) => {
                 {item.title} ({item.year})
             </Link>
         </StyledItemRow>
-        <ButtonRowDiv>
-            <StyledButton>Viewed</StyledButton>
-        </ButtonRowDiv>
+        {!item.seen && (
+            <ButtonRowDiv>
+                <StyledButton onClick={handleClick}>Viewed</StyledButton>
+            </ButtonRowDiv>
+        )}
         </StyledContainerItem>
     )
 }
